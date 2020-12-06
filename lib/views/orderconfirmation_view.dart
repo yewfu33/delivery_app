@@ -14,29 +14,22 @@ void showOrderCreatedDialog(
   showDialog(
     context: context,
     barrierDismissible: false,
-    builder: (_) => Theme(
-      data: ThemeData(
-        colorScheme: ColorScheme.light().copyWith(
-          primary: primaryColor,
-        ),
-      ),
-      child: WillPopScope(
-        onWillPop: () async {
-          return false;
-        },
-        child: AlertDialog(
-          title: Text(title),
-          content: Text(content),
-          actions: [
-            FlatButton(
-              onPressed: () {
-                locator<NavigationService>()
-                    .navigateToAndRemoveUntil(route.mainpage);
-              },
-              child: Text('OK'),
-            )
-          ],
-        ),
+    builder: (_) => WillPopScope(
+      onWillPop: () async {
+        return false;
+      },
+      child: AlertDialog(
+        title: Text(title),
+        content: Text(content),
+        actions: [
+          FlatButton(
+            onPressed: () {
+              locator<NavigationService>()
+                  .navigateToAndRemoveUntil(route.mainpage);
+            },
+            child: Text('OK'),
+          )
+        ],
       ),
     ),
   );
@@ -94,7 +87,7 @@ class OrderConfirmationPage extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w500,
-                        color: primaryColor,
+                        color: Constant.primaryColor,
                       ),
                     ),
                     Container(
@@ -124,7 +117,7 @@ class OrderConfirmationPage extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w500,
-                        color: primaryColor,
+                        color: Constant.primaryColor,
                       ),
                     ),
                     SizedBox(height: 15),
@@ -203,7 +196,7 @@ class _BottomActionBarState extends State<BottomActionBar> {
           Text(
             'RM 10',
             style: TextStyle(
-              color: primaryColor,
+              color: Constant.primaryColor,
               fontSize: 19.0,
               letterSpacing: 0.4,
               fontWeight: FontWeight.w600,
@@ -213,7 +206,8 @@ class _BottomActionBarState extends State<BottomActionBar> {
             FlatButton(
               onPressed: () {},
               child: CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(primaryColor)),
+                  valueColor:
+                      AlwaysStoppedAnimation<Color>(Constant.primaryColor)),
             )
           else
             RaisedButton(
@@ -232,7 +226,7 @@ class _BottomActionBarState extends State<BottomActionBar> {
                       context, 'Error occured', 'Please try again later');
                 }
               },
-              color: primaryColor,
+              color: Constant.primaryColor,
               textColor: Colors.white,
               child: Text(
                 'CREATE ORDER',

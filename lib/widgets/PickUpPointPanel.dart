@@ -24,19 +24,19 @@ class RemoveAddressButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: <Widget>[
-        Spacer(),
+        const Spacer(),
         FlatButton(
             onPressed: () => voidCallBack(),
             child: Row(
               children: <Widget>[
-                Icon(Icons.delete_sweep, color: primaryColor),
-                SizedBox(width: 1.5),
+                Icon(Icons.delete_sweep, color: Constant.primaryColor),
+                const SizedBox(width: 1.5),
                 Text(
                   'Remove address',
                   style: TextStyle(
                     letterSpacing: 0.4,
                     fontSize: 14,
-                    color: primaryColor,
+                    color: Constant.primaryColor,
                   ),
                 ),
               ],
@@ -200,9 +200,8 @@ Future<DateTime> openDatePicker(BuildContext context) {
     builder: (_, Widget child) {
       return Theme(
         data: ThemeData(
-          colorScheme: ColorScheme.light().copyWith(
-            primary: primaryColor,
-          ),
+          colorScheme:
+              ColorScheme.light().copyWith(primary: Constant.primaryColor),
         ),
         child: child,
       );
@@ -217,9 +216,8 @@ Future<TimeOfDay> openTimePicker(BuildContext context) {
     builder: (_, Widget child) {
       return Theme(
         data: ThemeData(
-          colorScheme: ColorScheme.light().copyWith(
-            primary: primaryColor,
-          ),
+          colorScheme:
+              ColorScheme.light().copyWith(primary: Constant.primaryColor),
         ),
         child: child,
       );
@@ -365,15 +363,12 @@ class _PickUpPointPanelState extends State<PickUpPointPanel> {
               mainAxisAlignment: MainAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                Icon(
-                  Icons.add_location,
-                  color: primaryColor,
-                ),
+                Icon(Icons.add_location, color: Constant.primaryColor),
                 const SizedBox(width: 1.5),
                 Text(
                   'Add more delivery point',
                   style: TextStyle(
-                    color: primaryColor,
+                    color: Constant.primaryColor,
                     fontSize: 15,
                     letterSpacing: 0.4,
                   ),

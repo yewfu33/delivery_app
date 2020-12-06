@@ -23,12 +23,12 @@ class OrdersPage extends StatelessWidget {
           ],
           bottom: TabBar(
             labelColor: Colors.white,
-            indicatorColor: primaryColor,
+            indicatorColor: Constant.primaryColor,
             tabs: <Widget>[
               Tab(
                 child: Text(
                   'Active',
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 16.0,
                     letterSpacing: 0.1,
                   ),
@@ -37,7 +37,7 @@ class OrdersPage extends StatelessWidget {
               Tab(
                 child: Text(
                   'Completed',
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 16.0,
                     letterSpacing: 0.1,
                   ),
@@ -46,7 +46,7 @@ class OrdersPage extends StatelessWidget {
               Tab(
                 child: Text(
                   'Inbox',
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 16.0,
                     letterSpacing: 0.1,
                   ),

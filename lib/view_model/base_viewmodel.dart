@@ -21,23 +21,23 @@ class BaseViewModel extends ChangeNotifier {
   void showErrorDialog(BuildContext context,
       {String message = "Please verify entered information is correct."}) {
     showDialog(
-        context: context,
-        barrierDismissible: true,
-        barrierColor: Colors.black.withOpacity(0.5),
-        builder: (_) => AlertDialog(
-              title: Text("Error"),
-              content: Text(message),
-              actions: [
-                FlatButton(
-                  child: Text(
-                    "OK",
-                    style: TextStyle(color: primaryColor),
-                  ),
-                  onPressed: () {
-                    locator<NavigationService>().navigatePop();
-                  },
-                ),
-              ],
-            ));
+      context: context,
+      barrierDismissible: true,
+      barrierColor: Colors.black.withOpacity(0.5),
+      builder: (_) {
+        return AlertDialog(
+          title: Text("Error"),
+          content: Text(message),
+          actions: [
+            FlatButton(
+              child: Text("OK", style: TextStyle(color: Constant.primaryColor)),
+              onPressed: () {
+                locator<NavigationService>().navigatePop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 }

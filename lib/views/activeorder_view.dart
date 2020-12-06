@@ -24,80 +24,81 @@ class _ActiveOrderState extends State<ActiveOrder> {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<ActiveOrderViewModel>(
       create: (_) => ActiveOrderViewModel(),
-      child: Consumer<ActiveOrderViewModel>(
-        builder: (context, model, child) {
-          return EasyRefresh.custom(
-            header: DeliveryHeader(
-              backgroundColor: Colors.grey[100],
-            ),
-            firstRefresh: true,
-            firstRefreshWidget: Container(
-              child: Center(
-                child: CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation<Color>(primaryColor)),
-              ),
-            ),
-            onRefresh: () async {
-              _orders = await model.fetchActiveOrder();
-              if (_orders == null) return;
+      builder: (context, _) {
+        final model = context.watch<ActiveOrderViewModel>();
 
-              if (mounted) {
-                setState(() {
-                  _count = _orders.length;
-                });
-              }
-            },
-            onLoad: null,
-            slivers: <Widget>[
-              SliverList(
-                delegate: SliverChildBuilderDelegate(
-                  (context, index) {
-                    return Column(
-                      children: [
-                        ActiveOrderList(order: _orders[index]),
-                      ],
-                    );
-                  },
-                  childCount: _count,
-                ),
+        return EasyRefresh.custom(
+          header: DeliveryHeader(
+            backgroundColor: Colors.grey[100],
+          ),
+          firstRefresh: true,
+          firstRefreshWidget: Container(
+            child: Center(
+              child: CircularProgressIndicator(
+                  valueColor:
+                      AlwaysStoppedAnimation<Color>(Constant.primaryColor)),
+            ),
+          ),
+          onRefresh: () async {
+            _orders = await model.fetchActiveOrder();
+            if (_orders == null) return;
+
+            if (mounted) {
+              setState(() {
+                _count = _orders.length;
+              });
+            }
+          },
+          onLoad: null,
+          slivers: <Widget>[
+            SliverList(
+              delegate: SliverChildBuilderDelegate(
+                (context, index) {
+                  return Column(
+                    children: [
+                      ActiveOrderList(order: _orders[index]),
+                    ],
+                  );
+                },
+                childCount: _count,
               ),
-            ],
-            emptyWidget: (_orders == null || _orders.length == 0)
-                ? Container(
-                    height: double.infinity,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        Expanded(
-                          child: SizedBox(),
-                          flex: 2,
+            ),
+          ],
+          emptyWidget: (_orders == null || _orders.length == 0)
+              ? Container(
+                  height: double.infinity,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Expanded(
+                        child: SizedBox(),
+                        flex: 2,
+                      ),
+                      SizedBox(
+                        width: 50.0,
+                        height: 60.0,
+                        child: Icon(
+                          Icons.assignment,
+                          size: 40,
+                          color: Colors.grey[400],
                         ),
-                        SizedBox(
-                          width: 50.0,
-                          height: 60.0,
-                          child: Icon(
-                            Icons.assignment,
-                            size: 40,
-                            color: Colors.grey[400],
-                          ),
-                        ),
-                        Text(
-                          'No active orders at the moment',
-                          style: TextStyle(
-                              fontSize: 14.0, color: Colors.grey[400]),
-                        ),
-                        Expanded(
-                          child: SizedBox(),
-                          flex: 3,
-                        ),
-                      ],
-                    ),
-                  )
-                : null,
-          );
-        },
-      ),
+                      ),
+                      Text(
+                        'No active orders at the moment',
+                        style:
+                            TextStyle(fontSize: 14.0, color: Colors.grey[400]),
+                      ),
+                      Expanded(
+                        child: SizedBox(),
+                        flex: 3,
+                      ),
+                    ],
+                  ),
+                )
+              : null,
+        );
+      },
     );
   }
 }
@@ -130,7 +131,7 @@ class ActiveOrderList extends StatelessWidget {
                   setOrderStatus(order.status),
                   style: GoogleFonts.firaSans(
                     fontSize: 16,
-                    color: primaryColor,
+                    color: Constant.primaryColor,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -148,11 +149,30 @@ class ActiveOrderList extends StatelessWidget {
             ),
             Padding(
               padding: const EdgeInsets.only(bottom: 10, top: 5),
-              child: Text(
-                order.address,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: GoogleFonts.roboto(fontSize: 14),
+              //   child: Text(
+              //     order.address,
+              //     maxLines: 2,
+              //     overflow: TextOverflow.ellipsis,
+              //     softWrap: true,
+              //     style: GoogleFonts.roboto(fontSize: 14),
+              //   ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  const Icon(Icons.explore),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Text(
+                      order.address,
+                      maxLines: 3,
+                      overflow: TextOverflow.ellipsis,
+                      softWrap: true,
+                      style: GoogleFonts.roboto(fontSize: 14),
+                    ),
+                  ),
+                ],
               ),
             ),
             Text(

@@ -49,7 +49,8 @@ class _LoadingDialogState extends State<LoadingDialog> {
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation<Color>(primaryColor),
+                    valueColor:
+                        AlwaysStoppedAnimation<Color>(Constant.primaryColor),
                   ),
                   SizedBox(height: 15.0),
                   Text(

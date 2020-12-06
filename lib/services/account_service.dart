@@ -24,7 +24,7 @@ class AccountService extends ApiService {
   Future sendVerificationCode(int code) async {
     try {
       final res = await http.post(
-        serverName + 'api/verification',
+        Constant.serverName + 'api/verification',
         headers: headers,
         body: json.encode({
           'value': code.toString(),
@@ -43,7 +43,7 @@ class AccountService extends ApiService {
   Future<http.Response> login(LoginModel model) async {
     try {
       return await client.post(
-        serverName + accountPath + '/authenticate',
+        Constant.serverName + accountPath + '/authenticate',
         headers: headers,
         body: json.encode(model.toMap()),
       );
@@ -59,7 +59,7 @@ class AccountService extends ApiService {
   Future<http.Response> register(RegisterModel model) async {
     try {
       return await client.post(
-        serverName + accountPath + '/register',
+        Constant.serverName + accountPath + '/register',
         headers: headers,
         body: json.encode(model.toMap()),
       );

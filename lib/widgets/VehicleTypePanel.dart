@@ -42,8 +42,8 @@ class VehicleTypePanel extends StatelessWidget {
           model.updateVehicleType(i);
         },
         groupValue: model.order.vehicleType,
-        borderColor: primaryColor,
-        selectedColor: primaryColor,
+        borderColor: Constant.primaryColor,
+        selectedColor: Constant.primaryColor,
         padding: const EdgeInsets.all(10),
       ),
     );

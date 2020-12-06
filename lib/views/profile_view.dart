@@ -74,16 +74,13 @@ class _ProfileViewState extends State<ProfileView> {
                 title: Text('About'),
                 subtitle: Text('Version, licenses'),
               ),
-              Divider(
-                height: 6,
-                thickness: 0.666,
-              ),
+              const Divider(height: 6, thickness: 0.666),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8),
                 child: Row(
                   children: <Widget>[
                     FlatButton(
-                      textColor: primaryColor,
+                      textColor: Constant.primaryColor,
                       onPressed: () async {
                         SharedPreferences prefs =
                             await SharedPreferences.getInstance();

@@ -21,8 +21,8 @@ class RegisterViewModel extends BaseViewModel {
   bool autoValidateForm = false;
   static int generatedVerificationCode;
   int tryAgainInSeconds;
-  int max = 99999;
-  int min = 10000;
+  final int max = 99999;
+  final int min = 10000;
   final _formKey = GlobalKey<FormState>();
   get formKey => _formKey;
   static final _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -34,7 +34,7 @@ class RegisterViewModel extends BaseViewModel {
     _scaffoldKey.currentState.showSnackBar(
       SnackBar(
         duration: Duration(milliseconds: 500),
-        content: Text('Verification code sent'),
+        content: Text('Verification Code sent'),
       ),
     );
   });
@@ -95,7 +95,7 @@ class RegisterViewModel extends BaseViewModel {
             } else {
               // error 400 maybe
               onLoading(false);
-              showErrorDialog(context);
+              showErrorDialog(context, message: res.reasonPhrase);
             }
           }).catchError((e) {
             onLoading(false);

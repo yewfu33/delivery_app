@@ -14,15 +14,10 @@ class _LoadingViewWrapperState extends State<LoadingViewWrapper> {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primaryColor: primaryColor,
-        accentColor: accentColor,
-      ),
-      builder: (context, widget) => Navigator(
+      theme: ThemeData(primaryColor: Constant.primaryColor),
+      builder: (_, widget) => Navigator(
         onGenerateRoute: (settings) => MaterialPageRoute(
-          builder: (context) => LoadingDialog(
-            child: widget,
-          ),
+          builder: (context) => LoadingDialog(child: widget),
         ),
       ),
       home: widget.child,

@@ -37,16 +37,16 @@ class MyScrollBehavior extends ScrollBehavior {
 // get order status
 String setOrderStatus(int status) {
   switch (status) {
-    case 1:
+    case 0:
       return 'Active';
       break;
-    case 2:
+    case 1:
       return 'In Deliver';
       break;
-    case 3:
+    case 2:
       return 'Completed';
       break;
-    case 4:
+    case 3:
       return 'Cancelled';
       break;
     default:
@@ -57,10 +57,10 @@ String setOrderStatus(int status) {
 // get vehicle type
 String setVehicleType(int type) {
   switch (type) {
-    case 1:
+    case 0:
       return 'Motorbike';
       break;
-    case 2:
+    case 1:
       return 'Car';
       break;
     default:

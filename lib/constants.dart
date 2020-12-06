@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
-final Color primaryColor = Colors.redAccent[700];
-final Color accentColor = Colors.orange[600];
+class Constant {
+  static const Color primaryColor = const Color(0xFFD50000);
 
-const String port = '57934';
-const String serverName = 'http://192.168.1.5:$port/';
+  static const String port = '57934';
+  static const String serverName = 'http://192.168.0.131:$port/';
 // final String serverName = 'http://192.168.13.50:$port/';
-const String hub = "tracking";
+  static const String hub = "tracking";
+}

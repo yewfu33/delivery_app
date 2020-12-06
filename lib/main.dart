@@ -28,10 +28,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Delivery App',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primaryColor: primaryColor,
-        accentColor: accentColor,
-      ),
+      theme: ThemeData(primaryColor: Constant.primaryColor),
       onGenerateRoute: Router.onGenerateRoute,
       initialRoute: route.mainpage,
       navigatorKey: locator<NavigationService>().navigatorKey,
@@ -80,18 +77,19 @@ class _HomeState extends State<Home> {
               return Landing();
             } else {
               return Scaffold(
-                body: PageTransitionSwitcher(
-                  child: _children[_currentIndex],
-                  transitionBuilder:
-                      (child, primaryAnimation, secondaryAnimation) {
-                    return SharedAxisTransition(
-                      animation: primaryAnimation,
-                      secondaryAnimation: secondaryAnimation,
-                      transitionType: SharedAxisTransitionType.horizontal,
-                      child: child,
-                    );
-                  },
-                ),
+                // body: PageTransitionSwitcher(
+                //   child: _children[_currentIndex],
+                //   transitionBuilder:
+                //       (child, primaryAnimation, secondaryAnimation) {
+                //     return SharedAxisTransition(
+                //       animation: primaryAnimation,
+                //       secondaryAnimation: secondaryAnimation,
+                //       transitionType: SharedAxisTransitionType.horizontal,
+                //       child: child,
+                //     );
+                //   },
+                // ),
+                body: _children[_currentIndex],
                 bottomNavigationBar: BottomNavigationBar(
                   onTap: (int index) {
                     if (index == 1) {
@@ -102,7 +100,7 @@ class _HomeState extends State<Home> {
                       _currentIndex = index;
                     });
                   },
-                  backgroundColor: primaryColor,
+                  backgroundColor: Constant.primaryColor,
                   fixedColor: Colors.white,
                   unselectedItemColor: Colors.white70,
                   currentIndex: _currentIndex,

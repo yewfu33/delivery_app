@@ -11,7 +11,7 @@ class TrackingService {
   HubConnection hubConnection;
 
   // The location of the SignalR Server.
-  final String serverUrl = "$serverName$hub";
+  final String serverUrl = "${Constant.serverName}${Constant.hub}";
 
   // traking use stream
   StreamController<CouriersLocation> _trackingController =

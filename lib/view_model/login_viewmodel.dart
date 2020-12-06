@@ -62,10 +62,11 @@ class LoginViewModel extends BaseViewModel {
         } else {
           // error 400 maybe
           onLoading(false);
-          showErrorDialog(context);
+          showErrorDialog(context, message: res.reasonPhrase);
         }
       }).catchError((e) {
         onLoading(false);
+        print(e.toString());
         showErrorDialog(context, message: e.toString());
       });
     }

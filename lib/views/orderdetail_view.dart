@@ -30,195 +30,199 @@ class OrderDetailView extends StatelessWidget {
       ),
       body: Stack(
         children: [
-          // min height == viewport height
           ConstrainedBox(
-            constraints:
-                BoxConstraints(minHeight: MediaQuery.of(context).size.height),
+            constraints: BoxConstraints.expand(),
             child: Container(
               width: double.infinity,
               child: ScrollConfiguration(
                 behavior: MyScrollBehavior(),
                 child: SingleChildScrollView(
-                  // bouncing effect
-                  physics: ScrollPhysics(),
-                  child: Container(
-                    child: Column(
-                      children: <Widget>[
-                        Container(
-                          width: double.infinity,
-                          padding: EdgeInsets.only(top: 19),
-                          child: Column(
-                            children: <Widget>[
-                              Container(
-                                width: double.infinity,
-                                padding: const EdgeInsets.only(
-                                    bottom: 10, left: 13, right: 20),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      mainAxisSize: MainAxisSize.max,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: <Widget>[
-                                        Expanded(
-                                          child: Text('RM 10',
-                                              style: TextStyle(
-                                                fontSize: 23.4,
-                                                fontWeight: FontWeight.w500,
-                                              )),
-                                        ),
-                                        Text(
-                                          setOrderStatus(o.status),
-                                          style: GoogleFonts.firaSans(
-                                            color: primaryColor,
-                                            fontSize: 19,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 17),
-                                    Text(
-                                      o.address,
-                                      maxLines: 3,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(
-                                        fontSize: 15.5,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              const DetailViewDivider(),
-                              //Courier Info
-                              Container(
-                                width: double.infinity,
-                                padding: EdgeInsets.only(
-                                    top: 5, bottom: 10, left: 13, right: 15),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    Text(
-                                      'Courier',
-                                      style: GoogleFonts.cabin(
-                                        color: primaryColor,
-                                        fontSize: 17,
-                                        fontWeight: FontWeight.w700,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 10),
-                                    Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: <Widget>[
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                              right: 25.0),
-                                          child: CircleAvatar(
-                                            backgroundColor: primaryColor,
-                                            radius: 27,
-                                            child: CircleAvatar(
-                                              radius: 25,
-                                              backgroundImage: NetworkImage(
-                                                  'https://www.bhg.com.au/media/23359/red-blue-black-bedroom.jpg?width=720&center=0.0,0.0'),
-                                            ),
-                                          ),
-                                        ),
-                                        Text('Courier name here',
-                                            style: GoogleFonts.cabin(
-                                              fontSize: 16,
+                  child: Column(
+                    children: <Widget>[
+                      Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.only(top: 19),
+                        child: Column(
+                          children: <Widget>[
+                            Container(
+                              width: double.infinity,
+                              padding: const EdgeInsets.only(
+                                  bottom: 10, left: 13, right: 20),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    mainAxisSize: MainAxisSize.max,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                      Expanded(
+                                        child: Text('RM 10',
+                                            style: TextStyle(
+                                              fontSize: 23.4,
+                                              fontWeight: FontWeight.w500,
                                             )),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              const DetailViewDivider(),
-                              // order detail
-                              Container(
-                                width: double.infinity,
-                                padding: EdgeInsets.only(
-                                    top: 5, bottom: 10, left: 13, right: 15),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    Text(
-                                      'Details',
-                                      style: GoogleFonts.cabin(
-                                        color: primaryColor,
-                                        fontSize: 17,
-                                        fontWeight: FontWeight.w700,
                                       ),
-                                    ),
-                                    const SizedBox(height: 10),
-                                    Table(
-                                      //   border: TableBorder.all(),
-                                      children: [
-                                        // Content
-                                        TableRow(
-                                          children: [
-                                            DetailTitleCell(title: 'Content'),
-                                            DetailPropertiesCell(title: o.name),
-                                          ],
+                                      Text(
+                                        setOrderStatus(o.status),
+                                        style: GoogleFonts.firaSans(
+                                          color: Constant.primaryColor,
+                                          fontSize: 19,
+                                          fontWeight: FontWeight.w500,
                                         ),
-                                        // Delivery type
-                                        TableRow(
-                                          children: [
-                                            DetailTitleCell(
-                                                title: 'Delivery Type'),
-                                            DetailPropertiesCell(
-                                                title: setVehicleType(
-                                                    o.vehicleType)),
-                                          ],
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 17),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    mainAxisSize: MainAxisSize.max,
+                                    children: [
+                                      const Icon(Icons.explore),
+                                      const SizedBox(width: 10),
+                                      Expanded(
+                                        child: Text(
+                                          o.address,
+                                          maxLines: 3,
+                                          overflow: TextOverflow.ellipsis,
+                                          softWrap: true,
+                                          style: GoogleFonts.roboto(
+                                              fontSize: 15.5,
+                                              fontWeight: FontWeight.w500),
                                         ),
-                                        // Weight
-                                        TableRow(
-                                          children: [
-                                            DetailTitleCell(
-                                                title: 'Weight (KG)'),
-                                            DetailPropertiesCell(
-                                                title: '${o.weight.ceil()}'),
-                                          ],
-                                        ),
-                                        // Payment Method
-                                        TableRow(
-                                          children: [
-                                            DetailTitleCell(
-                                                title: 'Payment Method'),
-                                            DetailPropertiesCell(title: 'Cash'),
-                                          ],
-                                        ),
-                                        // Created At
-                                        TableRow(
-                                          children: [
-                                            DetailTitleCell(
-                                                title: 'Created At'),
-                                            DetailPropertiesCell(
-                                                title: DateFormat(
-                                                        'dd MMM yyyy h:mm a')
-                                                    .format(o.dateTime)),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
                               ),
-                              const DetailViewDivider(),
-                              DeliveryPoint(order: o),
-                              SizedBox(
-                                height:
-                                    MediaQuery.of(context).size.height * 0.05,
-                              )
-                            ],
-                          ),
+                            ),
+                            const DetailViewDivider(),
+                            //Courier Info
+                            Container(
+                              width: double.infinity,
+                              padding: EdgeInsets.only(
+                                  top: 5, bottom: 10, left: 13, right: 15),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Text(
+                                    'Courier',
+                                    style: GoogleFonts.cabin(
+                                      color: Constant.primaryColor,
+                                      fontSize: 17,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 10),
+                                  Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: <Widget>[
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(right: 25.0),
+                                        child: CircleAvatar(
+                                          backgroundColor:
+                                              Constant.primaryColor,
+                                          radius: 27,
+                                          child: CircleAvatar(
+                                            radius: 25,
+                                            backgroundImage: NetworkImage(
+                                                'https://www.bhg.com.au/media/23359/red-blue-black-bedroom.jpg?width=720&center=0.0,0.0'),
+                                          ),
+                                        ),
+                                      ),
+                                      Text('Courier name here',
+                                          style: GoogleFonts.cabin(
+                                            fontSize: 16,
+                                          )),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const DetailViewDivider(),
+                            // order detail
+                            Container(
+                              width: double.infinity,
+                              padding: EdgeInsets.only(
+                                  top: 5, bottom: 10, left: 13, right: 15),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Text(
+                                    'Details',
+                                    style: GoogleFonts.cabin(
+                                      color: Constant.primaryColor,
+                                      fontSize: 17,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 10),
+                                  Table(
+                                    //   border: TableBorder.all(),
+                                    children: [
+                                      // Content
+                                      TableRow(
+                                        children: [
+                                          DetailTitleCell(title: 'Content'),
+                                          DetailPropertiesCell(title: o.name),
+                                        ],
+                                      ),
+                                      // Delivery type
+                                      TableRow(
+                                        children: [
+                                          DetailTitleCell(
+                                              title: 'Delivery Type'),
+                                          DetailPropertiesCell(
+                                              title: setVehicleType(
+                                                  o.vehicleType)),
+                                        ],
+                                      ),
+                                      // Weight
+                                      TableRow(
+                                        children: [
+                                          DetailTitleCell(title: 'Weight (KG)'),
+                                          DetailPropertiesCell(
+                                              title: '${o.weight.ceil()}'),
+                                        ],
+                                      ),
+                                      // Payment Method
+                                      TableRow(
+                                        children: [
+                                          DetailTitleCell(
+                                              title: 'Payment Method'),
+                                          DetailPropertiesCell(title: 'Cash'),
+                                        ],
+                                      ),
+                                      // Created At
+                                      TableRow(
+                                        children: [
+                                          DetailTitleCell(title: 'Created At'),
+                                          DetailPropertiesCell(
+                                              title: DateFormat(
+                                                      'dd MMM yyyy h:mm a')
+                                                  .format(o.dateTime)),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const DetailViewDivider(),
+                            DeliveryPoint(order: o),
+                            SizedBox(
+                              height: MediaQuery.of(context).size.height * 0.05,
+                            )
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -234,9 +238,9 @@ class OrderDetailView extends StatelessWidget {
               child: SizedBox(
                 width: double.infinity,
                 child: ActionButton(
-                  text: 'Track Order',
+                  text: 'Track Order'.toUpperCase(),
                   function: () {},
-                  color: primaryColor,
+                  color: Constant.primaryColor,
                 ),
               ),
             ),
@@ -348,75 +352,70 @@ class _DeliveryPointState extends State<DeliveryPoint> {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 10),
-      child: Theme(
-        data: ThemeData(
-          colorScheme: ColorScheme.light().copyWith(
-            primary: primaryColor,
+      child: Stepper(
+        physics: NeverScrollableScrollPhysics(),
+        controlsBuilder: (BuildContext context,
+                {VoidCallback onStepContinue, VoidCallback onStepCancel}) =>
+            Container(),
+        steps: [
+          Step(
+            isActive: true,
+            title: Row(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.75,
+                  child: Text(
+                    widget.order.address,
+                    style: const TextStyle(
+                        fontSize: 14, fontWeight: FontWeight.w600),
+                    overflow: TextOverflow.ellipsis,
+                    softWrap: true,
+                    maxLines: 3,
+                  ),
+                ),
+              ],
+            ),
+            content: StepContent(
+                date: widget.order.dateTime,
+                contact: widget.order.contact,
+                remark: widget.order.comment),
+            state: StepState.indexed,
           ),
-        ),
-        child: Stepper(
-          physics: NeverScrollableScrollPhysics(),
-          controlsBuilder: (BuildContext context,
-                  {VoidCallback onStepContinue, VoidCallback onStepCancel}) =>
-              Container(),
-          steps: [
-            Step(
+          ...widget.order.dropPoint.map((d) {
+            return Step(
+              isActive: true,
               title: Row(
                 mainAxisSize: MainAxisSize.max,
                 children: [
                   SizedBox(
                     width: MediaQuery.of(context).size.width * 0.75,
                     child: Text(
-                      widget.order.address,
-                      style: TextStyle(
+                      d.address,
+                      style: const TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
                       ),
                       overflow: TextOverflow.ellipsis,
                       maxLines: 3,
+                      softWrap: true,
                     ),
                   ),
                 ],
               ),
               content: StepContent(
-                  date: widget.order.dateTime,
-                  contact: widget.order.contact,
-                  remark: widget.order.comment),
+                date: d.dateTime,
+                contact: d.contact,
+                remark: d.comment,
+              ),
               state: StepState.indexed,
-            ),
-            ...widget.order.dropPoint
-                .map((d) => Step(
-                      title: Row(
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.75,
-                            child: Text(
-                              d.address,
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
-                              ),
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 3,
-                            ),
-                          ),
-                        ],
-                      ),
-                      content: StepContent(
-                        date: d.dateTime,
-                        contact: d.contact,
-                        remark: d.comment,
-                      ),
-                      state: StepState.indexed,
-                    ))
-                .toList(),
-          ],
-          currentStep: _index,
-          onStepTapped: (int i) {
-            setState(() => _index = i);
-          },
-        ),
+            );
+          }).toList(),
+        ],
+        currentStep: _index,
+        onStepTapped: (int i) {
+          setState(() => _index = i);
+        },
       ),
     );
   }
@@ -471,12 +470,14 @@ class StepContentProperties extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(title,
-              style: GoogleFonts.cabin(
-                fontSize: 15,
-                color: Colors.grey[600],
-                fontWeight: FontWeight.w500,
-              )),
+          Text(
+            title,
+            style: GoogleFonts.cabin(
+              fontSize: 15,
+              color: Colors.grey[600],
+              fontWeight: FontWeight.w500,
+            ),
+          ),
           const SizedBox(height: 5),
           Text(property, style: GoogleFonts.sourceSansPro(fontSize: 15)),
         ],

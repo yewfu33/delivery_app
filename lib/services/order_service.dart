@@ -11,7 +11,7 @@ class OrderService extends ApiService {
     print(json.encode(order.toMap(), toEncodable: myEncode));
     try {
       return await client.post(
-        serverName + orderPath,
+        Constant.serverName + orderPath,
         body: json.encode(order.toMap(), toEncodable: myEncode),
         headers: {
           'Content-type': 'application/json',
@@ -30,7 +30,7 @@ class OrderService extends ApiService {
   Future<http.Response> getOrderById(int id) async {
     try {
       return await client.get(
-        serverName + orderPath + '/' + id.toString(),
+        Constant.serverName + orderPath + '/' + id.toString(),
         headers: {
           HttpHeaders.authorizationHeader: await getAuthToken(),
         },
@@ -46,7 +46,7 @@ class OrderService extends ApiService {
   Future<http.Response> getAllOrders() async {
     try {
       return await client.get(
-        serverName + orderPath,
+        Constant.serverName + orderPath,
         headers: {
           HttpHeaders.authorizationHeader: await getAuthToken(),
         },
@@ -63,7 +63,7 @@ class OrderService extends ApiService {
     try {
       int id = await getUserId();
       return await client.get(
-        serverName + orderPath + '/users/' + id.toString(),
+        Constant.serverName + orderPath + '/users/' + id.toString(),
         headers: {
           HttpHeaders.authorizationHeader: await getAuthToken(),
         },

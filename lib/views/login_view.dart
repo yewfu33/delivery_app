@@ -8,8 +8,25 @@ import 'package:provider/provider.dart';
 import 'package:delivery_app/routes_name.dart' as route;
 
 //individual form
-class IndividualLoginView extends StatelessWidget {
-  final _controller = new TextEditingController(text: '+60 ');
+class IndividualLoginView extends StatefulWidget {
+  @override
+  _IndividualLoginViewState createState() => _IndividualLoginViewState();
+}
+
+class _IndividualLoginViewState extends State<IndividualLoginView> {
+  TextEditingController _controller;
+
+  @override
+  void initState() {
+    _controller = new TextEditingController(text: '+60 ');
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -17,10 +34,7 @@ class IndividualLoginView extends StatelessWidget {
 
     return SingleChildScrollView(
       child: Container(
-        padding: EdgeInsets.symmetric(
-          vertical: 25.0,
-          horizontal: 25.0,
-        ),
+        padding: EdgeInsets.symmetric(vertical: 25.0, horizontal: 25.0),
         child: Form(
           key: model.formKey,
           child: Column(
@@ -55,9 +69,12 @@ class IndividualLoginView extends StatelessWidget {
                   width: double.infinity,
                   child: RaisedButton(
                     onPressed: () {
+                      // bring down the keyboard
+                      FocusScope.of(context).unfocus();
+
                       model.individualLogin(context);
                     },
-                    color: primaryColor,
+                    color: Constant.primaryColor,
                     textColor: Colors.white,
                     child: Text(
                       'Log-in',
@@ -76,7 +93,7 @@ class IndividualLoginView extends StatelessWidget {
                   alignment: Alignment.centerLeft,
                   child: FlatButton(
                     onPressed: () {},
-                    textColor: primaryColor,
+                    textColor: Constant.primaryColor,
                     child: Text('RESET PASSWORD'),
                   ),
                 ),
@@ -101,7 +118,7 @@ class LoginView extends StatelessWidget {
             leading: BackButton(onPressed: () => Navigator.pop(context)),
             bottom: TabBar(
               labelColor: Colors.white,
-              indicatorColor: primaryColor,
+              indicatorColor: Constant.primaryColor,
               tabs: <Widget>[
                 Tab(
                   child: Text(
