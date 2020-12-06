@@ -12,11 +12,11 @@ import 'package:flutter/material.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_config/flutter_config.dart';
-import 'package:animations/animations.dart';
 
 void main() async {
-  setupLocator();
   WidgetsFlutterBinding.ensureInitialized();
+  // setting up getit
+  setupLocator();
   // obtain .env variables
   await FlutterConfig.loadEnvVariables();
   runApp(MyApp());

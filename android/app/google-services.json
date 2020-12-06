@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "418746452183",
+    "firebase_url": "https://deliveryappnotificationuse.firebaseio.com",
+    "project_id": "deliveryappnotificationuse",
+    "storage_bucket": "deliveryappnotificationuse.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:418746452183:android:295e0318548d89ad39c892",
+        "android_client_info": {
+          "package_name": "com.example.delivery_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "418746452183-iag426s0bhiu2fgm862t8i01m6ffiinj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD4fnrJoSvexoEEo8d_5Oct10V1WbbdtCU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "418746452183-iag426s0bhiu2fgm862t8i01m6ffiinj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
