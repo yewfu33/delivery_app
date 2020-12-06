@@ -1,4 +1,5 @@
 import 'package:delivery_app/constants.dart';
+import 'package:delivery_app/widgets/Slider.dart';
 import 'package:flutter/material.dart';
 import 'package:delivery_app/routes_name.dart' as route;
 
@@ -7,60 +8,49 @@ class Landing extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        color: Colors.grey[300],
-        child: Padding(
-          padding:
-              const EdgeInsets.only(top: 8, left: 10, right: 10, bottom: 25),
-          child: Column(
-            children: <Widget>[
-              Expanded(
-                child: Container(
-                  child: Center(
-                    child: Icon(Icons.local_shipping, size: 45),
-                  ),
+        color: Colors.white,
+        padding: const EdgeInsets.fromLTRB(10, 8, 10, 25),
+        child: Column(
+          children: <Widget>[
+            Expanded(
+              child: Container(
+                child: SliderView(slide: slideItems),
+              ),
+            ),
+            SizedBox(
+              width: double.infinity,
+              child: FlatButton(
+                padding: const EdgeInsets.symmetric(vertical: 15.0),
+                onPressed: () {
+                  Navigator.pushNamed(context, route.registerPage);
+                },
+                child: Text(
+                  'Create Account',
+                  style: const TextStyle(
+                      color: Colors.white, fontSize: 16, letterSpacing: 0.4),
+                ),
+                color: Constant.primaryColor,
+              ),
+            ),
+            const SizedBox(height: 10),
+            Container(
+              width: double.infinity,
+              decoration:
+                  BoxDecoration(border: Border.all(color: Colors.grey[300])),
+              child: RaisedButton(
+                elevation: 1.5,
+                color: Colors.white,
+                padding: const EdgeInsets.symmetric(vertical: 15.0),
+                onPressed: () {
+                  Navigator.pushNamed(context, route.loginPage);
+                },
+                child: Text(
+                  'Log In',
+                  style: const TextStyle(fontSize: 16, letterSpacing: 0.4),
                 ),
               ),
-              SizedBox(
-                width: double.infinity,
-                child: FlatButton(
-                  padding: EdgeInsets.symmetric(vertical: 15.0),
-                  onPressed: () {
-                    Navigator.pushNamed(context, route.registerPage);
-                  },
-                  child: Text(
-                    'Create Account',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      letterSpacing: 0.4,
-                    ),
-                  ),
-                  color: primaryColor,
-                ),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              SizedBox(
-                width: double.infinity,
-                child: RaisedButton(
-                  elevation: 0,
-                  color: Colors.white,
-                  padding: EdgeInsets.symmetric(vertical: 15.0),
-                  onPressed: () {
-                    Navigator.pushNamed(context, route.loginPage);
-                  },
-                  child: Text(
-                    'Log In',
-                    style: TextStyle(
-                      fontSize: 16,
-                      letterSpacing: 0.4,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
