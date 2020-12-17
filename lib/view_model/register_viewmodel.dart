@@ -8,6 +8,7 @@ import 'package:delivery_app/models/uiModels/register_model.dart';
 import 'package:delivery_app/models/user_type.dart';
 import 'package:delivery_app/services/account_service.dart';
 import 'package:delivery_app/services/navigation_service.dart';
+import 'package:delivery_app/services/notification_service.dart';
 import 'package:delivery_app/view_model/base_viewmodel.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +18,8 @@ import 'package:delivery_app/routes_name.dart' as route;
 class RegisterViewModel extends BaseViewModel {
   final AccountService accountService = locator<AccountService>();
   final NavigationService navigationService = locator<NavigationService>();
+  final NotificationService notificationService =
+      locator<NotificationService>();
 
   bool autoValidateForm = false;
   static int generatedVerificationCode;
@@ -60,13 +63,15 @@ class RegisterViewModel extends BaseViewModel {
       //show loading banner
       onLoading(true);
 
-      RegisterModel model = new RegisterModel(
+      try {
+        RegisterModel model = new RegisterModel(
           name: this.nameField,
           password: this.passwordField,
           phoneNum: this.phoneNumField,
-          userType: UserType.User);
+          fcmToken: await notificationService.getFcmToken(),
+          userType: UserType.User,
+        );
 
-      try {
         Response res = await accountService.register(model);
 
         if (res == null) throw Exception('fail to reach /register');
@@ -104,7 +109,7 @@ class RegisterViewModel extends BaseViewModel {
         } else {
           // error 400 maybe
           onLoading(false);
-          showErrorDialog(context);
+          showErrorDialog(context, message: res.reasonPhrase);
         }
       } catch (e) {
         // error 400 maybe
