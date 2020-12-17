@@ -50,7 +50,7 @@ class _RegisterViewState extends State<RegisterView> {
                         child: TextFormField(
                           validator: model.nameFieldValidator,
                           onSaved: model.nameFieldOnSave,
-                          decoration: myDecoration('First name*', null),
+                          decoration: myDecoration('Name*', null),
                         ),
                       ),
                       Padding(
