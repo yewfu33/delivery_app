@@ -7,6 +7,13 @@ import 'package:delivery_app/services/api_service.dart';
 import 'package:http/http.dart' as http;
 
 class OrderService extends ApiService {
+  static final OrderService _singleton = OrderService._();
+
+  // register sigleton instance
+  factory OrderService() => _singleton;
+
+  OrderService._();
+
   Future<http.Response> postOrder(Order order) async {
     print(json.encode(order.toMap(), toEncodable: myEncode));
     try {

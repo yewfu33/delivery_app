@@ -8,24 +8,32 @@ import 'package:delivery_app/models/uiModels/register_model.dart';
 import 'package:delivery_app/services/api_service.dart';
 
 import 'package:http/http.dart' as http;
-import 'package:http/io_client.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AccountService extends ApiService {
-  void setPrefs(Map<String, dynamic> body) async {
+  static final AccountService _singleton = AccountService._();
+
+  // register sigleton instance
+  factory AccountService() => _singleton;
+
+  AccountService._();
+
+  Future setPrefs(Map<String, dynamic> body) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     prefs.setInt('uid', body['id']);
-    prefs.setString('uname', body['name'].toString());
+    prefs.setString('uname', body['name']);
     prefs.setString('phone_num', body['phone_num']);
     prefs.setString('token', body['token']);
   }
 
-  Future sendVerificationCode(int code) async {
+  static Future sendVerificationCode(int code) async {
     try {
       final res = await http.post(
         Constant.serverName + 'api/verification',
-        headers: headers,
+        headers: {
+          'Content-type': 'application/json',
+        },
         body: json.encode({
           'value': code.toString(),
         }),

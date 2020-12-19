@@ -1,11 +1,16 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 
 class NotificationService {
+  static final NotificationService _singleton = NotificationService._init();
+
+  // register sigleton instance
+  factory NotificationService() => _singleton;
+
   final FirebaseMessaging _fcm = FirebaseMessaging();
 
   bool _initialized = false;
 
-  NotificationService.init() {
+  NotificationService._init() {
     this.init();
   }
 

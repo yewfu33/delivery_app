@@ -1,7 +1,5 @@
-import 'package:delivery_app/locator.dart';
 import 'package:delivery_app/models/drop_point.dart';
 import 'package:delivery_app/models/order.dart';
-import 'package:delivery_app/services/navigation_service.dart';
 import 'package:delivery_app/services/order_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -9,13 +7,15 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:delivery_app/routes_name.dart' as route;
 
 class AddOrderViewModel with ChangeNotifier {
-  final formKey = GlobalKey<FormState>();
+  final OrderService orderService = OrderService();
+  final _formKey = GlobalKey<FormState>();
+  get formKey => _formKey;
   bool autoValidateForm = false;
   Order order = new Order();
 
   bool validateForm() {
-    if (formKey.currentState.validate()) {
-      formKey.currentState.save();
+    if (_formKey.currentState.validate()) {
+      _formKey.currentState.save();
       return true;
     } else {
       autoValidateForm = true;
@@ -24,7 +24,7 @@ class AddOrderViewModel with ChangeNotifier {
     }
   }
 
-  void saveOrder() async {
+  void saveOrder(BuildContext context) async {
     if (validateForm()) {
       print('valid form');
       try {
@@ -36,7 +36,8 @@ class AddOrderViewModel with ChangeNotifier {
         print(err);
       }
 
-      locator<NavigationService>().navigateTo(
+      Navigator.pushNamed(
+        context,
         route.orderConfirmationPage,
         arguments: [
           order,
@@ -48,7 +49,7 @@ class AddOrderViewModel with ChangeNotifier {
 
   Future<bool> createOrder(Order o) async {
     try {
-      var res = await locator<OrderService>().postOrder(o);
+      var res = await orderService.postOrder(o);
       if (res == null) throw Exception('fail to post order');
 
       if (res.statusCode == 201) {
@@ -67,7 +68,6 @@ class AddOrderViewModel with ChangeNotifier {
 
   void updateVehicleType(int index) {
     order.vehicleType = index;
-    notifyListeners();
   }
 
   void removeLastDropPoint() {
@@ -80,33 +80,11 @@ class AddOrderViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  void nameFieldOnSave(String value) {
-    order.name = value;
-  }
-
-  void weightFieldOnSave(String value) {
-    order.weight = double.parse(value);
-  }
-
-  void pickAddressFieldOnChanged(String value) {
-    order.address = value;
-  }
-
-  void pickContactFieldOnSave(String value) {
-    order.contact = value.substring(4);
-  }
-
-  void pickCommentFieldOnSave(String value) {
-    order.comment = value;
-  }
-
-  void notifySenderOnChanged(_) {
+  void notifySenderOnChanged() {
     order.notifyMebySMS = !order.notifyMebySMS;
-    notifyListeners();
   }
 
-  void notifyRecipientOnChanged(_) {
+  void notifyRecipientOnChanged() {
     order.notifyRecipientbySMS = !order.notifyRecipientbySMS;
-    notifyListeners();
   }
 }

@@ -1,12 +1,10 @@
 import 'package:delivery_app/constants.dart';
 import 'package:delivery_app/models/order.dart';
-import 'package:delivery_app/services/navigation_service.dart';
 import 'package:flutter/material.dart';
 
 import 'package:intl/intl.dart';
 import 'package:delivery_app/routes_name.dart' as route;
 
-import '../locator.dart';
 import '../util.dart';
 
 void showOrderCreatedDialog(
@@ -24,8 +22,8 @@ void showOrderCreatedDialog(
         actions: [
           FlatButton(
             onPressed: () {
-              locator<NavigationService>()
-                  .navigateToAndRemoveUntil(route.mainpage);
+              Navigator.pushNamedAndRemoveUntil(
+                  context, route.mainpage, (route) => false);
             },
             child: Text('OK'),
           )
@@ -50,7 +48,7 @@ class OrderConfirmationPage extends StatelessWidget {
         title: Text('Order Confirmation'),
         leading: BackButton(
           onPressed: () {
-            locator<NavigationService>().navigatePop();
+            Navigator.pop(context);
           },
         ),
       ),

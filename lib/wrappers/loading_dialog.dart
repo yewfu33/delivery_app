@@ -1,5 +1,4 @@
 import 'package:delivery_app/constants.dart';
-import 'package:delivery_app/locator.dart';
 import 'package:delivery_app/services/dialog_service.dart';
 import 'package:flutter/material.dart';
 
@@ -12,7 +11,7 @@ class LoadingDialog extends StatefulWidget {
 }
 
 class _LoadingDialogState extends State<LoadingDialog> {
-  DialogService dialogService = locator<DialogService>();
+  final DialogService dialogService = DialogService();
 
   @override
   void initState() {

@@ -1,15 +1,12 @@
 import 'dart:convert';
 
-import 'package:delivery_app/locator.dart';
 import 'package:delivery_app/models/uiModels/order_model.dart';
-import 'package:delivery_app/services/navigation_service.dart';
 import 'package:delivery_app/services/order_service.dart';
-import 'package:delivery_app/routes_name.dart' as route;
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 
 class ActiveOrderViewModel with ChangeNotifier {
-  OrderService orderService = locator<OrderService>();
-  NavigationService navigationService = locator<NavigationService>();
+  final OrderService orderService = OrderService();
 
   bool _busy = true;
   get isBusy => _busy;
@@ -21,10 +18,6 @@ class ActiveOrderViewModel with ChangeNotifier {
 
   List<OrderModel> _orders;
   List<OrderModel> get orders => _orders;
-
-  void navigateToDetails(OrderModel order) {
-    navigationService.navigateTo(route.orderDetailPage, arguments: order);
-  }
 
   Future<List<OrderModel>> fetchActiveOrder() async {
     try {

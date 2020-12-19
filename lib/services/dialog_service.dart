@@ -1,9 +1,14 @@
 import 'dart:async';
-
-import 'package:delivery_app/locator.dart';
-import 'package:delivery_app/services/navigation_service.dart';
+import 'package:flutter/material.dart';
 
 class DialogService {
+  static final DialogService _singleton = DialogService._();
+
+  // register sigleton instance
+  factory DialogService() => _singleton;
+
+  DialogService._();
+
   Function _showDialogListener;
   Completer _dialogCompleter;
 
@@ -20,8 +25,8 @@ class DialogService {
   }
 
   /// Completes the _dialogCompleter to resume the Future's execution call
-  void dialogComplete() {
-    locator<NavigationService>().navigatePop();
+  void dialogComplete(BuildContext context) {
+    Navigator.pop(context);
     _dialogCompleter.complete();
     _dialogCompleter = null;
   }
