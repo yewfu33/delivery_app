@@ -9,8 +9,7 @@ import 'package:google_maps_place_picker/google_maps_place_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_config/flutter_config.dart';
 
-import 'CustomInputStyle.dart';
-import 'OrderFormValidator.dart';
+import 'MyInputDecoration.dart';
 
 class RemoveAddressButton extends StatelessWidget {
   final Function voidCallBack;
@@ -29,11 +28,11 @@ class RemoveAddressButton extends StatelessWidget {
             onPressed: () => voidCallBack(),
             child: Row(
               children: <Widget>[
-                Icon(Icons.delete_sweep, color: Constant.primaryColor),
+                const Icon(Icons.delete_sweep, color: Constant.primaryColor),
                 const SizedBox(width: 1.5),
                 Text(
                   'Remove address',
-                  style: TextStyle(
+                  style: const TextStyle(
                     letterSpacing: 0.4,
                     fontSize: 14,
                     color: Constant.primaryColor,
@@ -54,7 +53,7 @@ class PickedLocation {
 
 Future<PickedLocation> showPlacePicker(BuildContext context) async {
   /// initialize display a location
-  LatLng displayLocation = LatLng(1.550049, 103.5928664);
+  final LatLng displayLocation = LatLng(1.550049, 103.5928664);
 
   final result = await Navigator.push(
     context,
@@ -100,7 +99,13 @@ Step dropOffPoint(BuildContext context, AddOrderViewModel model, int index) {
         children: [
           TextFormField(
             controller: model.order.dropPoint[index].addressFieldController,
-            validator: addressValidator,
+            validator: (v) {
+              if (v.trim().isEmpty) {
+                return 'This field is required';
+              } else {
+                return null;
+              }
+            },
             maxLines: null,
             readOnly: true,
             onSaved: (String value) {
@@ -127,7 +132,13 @@ Step dropOffPoint(BuildContext context, AddOrderViewModel model, int index) {
           const SizedBox(height: 13),
           TextFormField(
             controller: model.order.dropPoint[index].phoneFieldController,
-            validator: contactValidator,
+            validator: (v) {
+              if (v == '+60 ') {
+                return 'This field is required';
+              } else {
+                return null;
+              }
+            },
             keyboardType: TextInputType.phone,
             onSaved: (String value) {
               model.order.dropPoint[index].contact = value.substring(4);
@@ -143,7 +154,13 @@ Step dropOffPoint(BuildContext context, AddOrderViewModel model, int index) {
           const SizedBox(height: 13),
           TextFormField(
             controller: model.order.dropPoint[index].dateTimeFieldController,
-            validator: datetimeValidator,
+            validator: (v) {
+              if (v.trim().isEmpty) {
+                return 'This field is required';
+              } else {
+                return null;
+              }
+            },
             readOnly: true,
             onTap: () async {
               final date = await openDatePicker(context);
@@ -237,9 +254,17 @@ class PickUpPointPanel extends StatefulWidget {
 class _PickUpPointPanelState extends State<PickUpPointPanel> {
   int _index = 0;
 
-  final _addressFieldController = TextEditingController();
-  final _dateTimeFieldController = TextEditingController();
-  final _contactFieldController = TextEditingController(text: '+60 ');
+  TextEditingController _addressFieldController;
+  TextEditingController _dateTimeFieldController;
+  TextEditingController _contactFieldController;
+
+  @override
+  void initState() {
+    super.initState();
+    _addressFieldController = TextEditingController();
+    _dateTimeFieldController = TextEditingController();
+    _contactFieldController = TextEditingController(text: '+60 ');
+  }
 
   @override
   void dispose() {
@@ -253,7 +278,8 @@ class _PickUpPointPanelState extends State<PickUpPointPanel> {
 
   @override
   Widget build(BuildContext context) {
-    AddOrderViewModel model = Provider.of<AddOrderViewModel>(context);
+    final AddOrderViewModel model =
+        Provider.of<AddOrderViewModel>(context, listen: false);
 
     return Column(
       children: [
@@ -276,8 +302,16 @@ class _PickUpPointPanelState extends State<PickUpPointPanel> {
                   children: [
                     TextFormField(
                       controller: _addressFieldController,
-                      validator: addressValidator,
-                      onSaved: model.pickAddressFieldOnChanged,
+                      validator: (v) {
+                        if (v.trim().isEmpty) {
+                          return 'This field is required';
+                        } else {
+                          return null;
+                        }
+                      },
+                      onSaved: (v) {
+                        model.order.address = v;
+                      },
                       readOnly: true,
                       maxLines: null,
                       onTap: () async {
@@ -291,7 +325,7 @@ class _PickUpPointPanelState extends State<PickUpPointPanel> {
                       },
                       decoration: InputDecoration(
                         hintText: 'Address',
-                        suffixIcon: Icon(Icons.gps_fixed),
+                        suffixIcon: const Icon(Icons.gps_fixed),
                         suffixIconConstraints: BoxConstraints.tightFor(),
                         contentPadding: const EdgeInsets.symmetric(vertical: 5),
                         hintStyle: customInputStyle(),
@@ -300,8 +334,16 @@ class _PickUpPointPanelState extends State<PickUpPointPanel> {
                     const SizedBox(height: 13),
                     TextFormField(
                       controller: _contactFieldController,
-                      validator: contactValidator,
-                      onSaved: model.pickContactFieldOnSave,
+                      validator: (v) {
+                        if (v == '+60 ') {
+                          return 'This field is required';
+                        } else {
+                          return null;
+                        }
+                      },
+                      onSaved: (v) {
+                        model.order.contact = v.substring(4);
+                      },
                       keyboardType: TextInputType.phone,
                       inputFormatters: [CustomPhoneNumberFormatter()],
                       decoration: InputDecoration(
@@ -314,7 +356,13 @@ class _PickUpPointPanelState extends State<PickUpPointPanel> {
                     const SizedBox(height: 13),
                     TextFormField(
                       controller: _dateTimeFieldController,
-                      validator: datetimeValidator,
+                      validator: (v) {
+                        if (v.trim().isEmpty) {
+                          return 'This field is required';
+                        } else {
+                          return null;
+                        }
+                      },
                       readOnly: true,
                       onTap: () async {
                         final date = await openDatePicker(context);
@@ -340,7 +388,9 @@ class _PickUpPointPanelState extends State<PickUpPointPanel> {
                     ),
                     const SizedBox(height: 13),
                     TextFormField(
-                      onSaved: model.pickCommentFieldOnSave,
+                      onSaved: (v) {
+                        model.order.comment = v;
+                      },
                       decoration: InputDecoration(
                         hintText: 'Remark',
                         contentPadding: const EdgeInsets.symmetric(vertical: 0),

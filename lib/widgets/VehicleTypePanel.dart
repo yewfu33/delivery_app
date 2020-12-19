@@ -4,14 +4,21 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class VehicleTypePanel extends StatelessWidget {
+class VehicleTypePanel extends StatefulWidget {
   const VehicleTypePanel({
     Key key,
   }) : super(key: key);
 
   @override
+  _VehicleTypePanelState createState() => _VehicleTypePanelState();
+}
+
+class _VehicleTypePanelState extends State<VehicleTypePanel> {
+  int v = 0;
+
+  @override
   Widget build(BuildContext context) {
-    var model = Provider.of<AddOrderViewModel>(context);
+    final model = Provider.of<AddOrderViewModel>(context, listen: false);
 
     return SizedBox(
       width: double.infinity,
@@ -40,8 +47,9 @@ class VehicleTypePanel extends StatelessWidget {
         },
         onValueChanged: (i) {
           model.updateVehicleType(i);
+          setState(() => v = i);
         },
-        groupValue: model.order.vehicleType,
+        groupValue: v,
         borderColor: Constant.primaryColor,
         selectedColor: Constant.primaryColor,
         padding: const EdgeInsets.all(10),

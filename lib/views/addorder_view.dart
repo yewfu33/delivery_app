@@ -1,8 +1,7 @@
 import 'package:delivery_app/constants.dart';
 import 'package:delivery_app/util.dart';
 import 'package:delivery_app/view_model/addorder_viewmodel.dart';
-import 'package:delivery_app/widgets/CustomInputStyle.dart';
-import 'package:delivery_app/widgets/OrderFormValidator.dart';
+import 'package:delivery_app/widgets/MyInputDecoration.dart';
 import 'package:delivery_app/widgets/PickUpPointPanel.dart';
 import 'package:delivery_app/widgets/VehicleTypePanel.dart';
 import 'package:flutter/material.dart';
@@ -24,7 +23,7 @@ class AddOrderView extends StatelessWidget {
 
         return Scaffold(
           appBar: AppBar(
-            title: Text('Add New Order'),
+            title: const Text('Add New Order'),
             leading: IconButton(
               icon: const Icon(Icons.close),
               iconSize: 27.0,
@@ -40,11 +39,9 @@ class AddOrderView extends StatelessWidget {
             ],
           ),
           bottomNavigationBar:
-              BottomActionBar(callBack: () => model.saveOrder()),
+              BottomActionBar(callBack: () => model.saveOrder(context)),
           body: ConstrainedBox(
-            constraints: BoxConstraints(
-              minHeight: MediaQuery.of(context).size.height,
-            ),
+            constraints: BoxConstraints.expand(),
             child: Container(
               width: double.infinity,
               padding: const EdgeInsets.only(top: 5.0),
@@ -59,14 +56,22 @@ class AddOrderView extends StatelessWidget {
                       child: Column(
                         children: <Widget>[
                           //vehicleType panel
-                          VehicleTypePanel(),
+                          const VehicleTypePanel(),
                           //name field
                           Padding(
                             padding: const EdgeInsets.symmetric(
                                 vertical: 8.0, horizontal: 18),
                             child: TextFormField(
-                              validator: nameValidator,
-                              onSaved: model.nameFieldOnSave,
+                              validator: (v) {
+                                if (v.trim().isEmpty) {
+                                  return 'This field is required';
+                                } else {
+                                  return null;
+                                }
+                              },
+                              onSaved: (v) {
+                                model.order.name = v;
+                              },
                               style: TextStyle(
                                 fontSize: 18,
                               ),
@@ -98,68 +103,27 @@ class AddOrderView extends StatelessWidget {
                                     key: Key(i.key),
                                   )
                               ],
-                              onChanged: (dynamic v) {
+                              onChanged: (v) {
                                 model.order.weight = v;
                               },
                             ),
                           ),
                           //pick and drop section
-                          PickUpPointPanel(),
+                          const PickUpPointPanel(),
                           Divider(
                             height: 20,
                             color: Colors.grey[200],
                             thickness: 20,
                           ),
                           //notify preferences
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 8.0, horizontal: 18),
-                            child: Container(
-                              child: Column(
-                                children: <Widget>[
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: <Widget>[
-                                      Text(
-                                        'Notify me by SMS',
-                                        style: customInputStyle(fontSize: 16),
-                                      ),
-                                      Switch(
-                                        activeColor: Constant.primaryColor,
-                                        value: model.order.notifyMebySMS,
-                                        onChanged: model.notifySenderOnChanged,
-                                      ),
-                                    ],
-                                  ),
-                                  Divider(height: 5, thickness: 1.5),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: <Widget>[
-                                      Text(
-                                        'Notify recipient by SMS',
-                                        style: customInputStyle(fontSize: 16),
-                                      ),
-                                      Switch(
-                                        activeColor: Constant.primaryColor,
-                                        value: model.order.notifyRecipientbySMS,
-                                        onChanged:
-                                            model.notifyRecipientOnChanged,
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
+                          const NotifyPreferences(),
                           Divider(
                             height: 20,
                             color: Colors.grey[200],
                             thickness: 20,
                           ),
                           //payment section
-                          PaymentSettingSection(),
+                          const PaymentSettingSection(),
                           Container(
                             height: 50,
                             color: Colors.grey[200],
@@ -178,6 +142,70 @@ class AddOrderView extends StatelessWidget {
   }
 }
 
+class NotifyPreferences extends StatefulWidget {
+  const NotifyPreferences({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  _NotifyPreferencesState createState() => _NotifyPreferencesState();
+}
+
+class _NotifyPreferencesState extends State<NotifyPreferences> {
+  bool notifyMe = false;
+  bool notifyRecipient = true;
+
+  @override
+  Widget build(BuildContext context) {
+    final model = Provider.of<AddOrderViewModel>(context, listen: false);
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 18),
+      child: Container(
+        child: Column(
+          children: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Text(
+                  'Notify me by SMS',
+                  style: customInputStyle(fontSize: 16),
+                ),
+                Switch(
+                  activeColor: Constant.primaryColor,
+                  value: notifyMe,
+                  onChanged: (_) {
+                    model.notifySenderOnChanged();
+                    notifyMe = !notifyMe;
+                  },
+                ),
+              ],
+            ),
+            const Divider(height: 5, thickness: 1.5),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Text(
+                  'Notify recipient by SMS',
+                  style: customInputStyle(fontSize: 16),
+                ),
+                Switch(
+                  activeColor: Constant.primaryColor,
+                  value: notifyRecipient,
+                  onChanged: (_) {
+                    model.notifyRecipientOnChanged();
+                    notifyRecipient = !notifyRecipient;
+                  },
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class BottomActionBar extends StatelessWidget {
   final Function callBack;
   const BottomActionBar({Key key, @required this.callBack}) : super(key: key);
@@ -191,7 +219,7 @@ class BottomActionBar extends StatelessWidget {
         children: [
           Text(
             'RM 10',
-            style: TextStyle(
+            style: const TextStyle(
               color: Constant.primaryColor,
               fontSize: 19.0,
               letterSpacing: 0.4,
@@ -206,7 +234,7 @@ class BottomActionBar extends StatelessWidget {
             textColor: Colors.white,
             child: Text(
               'CREATE ORDER',
-              style: TextStyle(fontSize: 15.0, letterSpacing: 0.4),
+              style: const TextStyle(fontSize: 15.0, letterSpacing: 0.4),
             ),
           ),
         ],
@@ -236,19 +264,19 @@ class PaymentSettingSection extends StatelessWidget {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                Icon(Icons.local_atm),
-                SizedBox(width: 10),
+                const Icon(Icons.local_atm),
+                const SizedBox(width: 10),
                 Text(
                   'Cash',
                   style: customInputStyle(fontSize: 16.5),
                 ),
-                Spacer(),
-                Icon(Icons.check),
+                const Spacer(),
+                const Icon(Icons.check),
               ],
             ),
           ),
         ),
-        SizedBox(height: 8.0),
+        const SizedBox(height: 8.0),
         // if (!dropAddress.contains('') && pickAddress != '') ...[
         //   Padding(
         //     padding: const EdgeInsets.only(top: 8.0, left: 25, right: 18),

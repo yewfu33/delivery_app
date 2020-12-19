@@ -13,13 +13,15 @@ class TrackingService {
   // The location of the SignalR Server.
   final String serverUrl = "${Constant.serverName}${Constant.hub}";
 
+  final hubMethodName = "CourierLocation";
+
   // traking use stream
   StreamController<CouriersLocation> _trackingController =
       StreamController<CouriersLocation>.broadcast();
 
   Stream<CouriersLocation> get trackingStream => _trackingController.stream;
 
-  TrackingService() {
+  TrackingService.init(String uid) {
     // Creates the connection by using the HubConnectionBuilder.
     hubConnection = HubConnectionBuilder().withUrl(serverUrl).build();
 
@@ -31,7 +33,7 @@ class TrackingService {
       print('${parameters[0]}');
     });
 
-    hubConnection.on("CouriersLocation", (List<Object> parameters) {
+    hubConnection.on(hubMethodName, (List<Object> parameters) {
       print(
           'On listen \"CouriersLocation\" hub, ${parameters[0].toString()} | ${parameters[1].toString()}');
 
@@ -41,7 +43,9 @@ class TrackingService {
     });
 
     try {
-      hubConnection.start().catchError((e) => throw e);
+      hubConnection.start().then((_) {
+        hubConnection.invoke("registerConnectionId", args: <Object>[uid]);
+      }).catchError((e) => throw e);
     } on SocketException catch (e) {
       print("socket exception in \"hub start\" ${e.toString()}");
     } catch (e) {
@@ -50,15 +54,15 @@ class TrackingService {
   }
 
   void off() {
-    hubConnection.off("CouriersLocation");
+    hubConnection.off(hubMethodName);
   }
 
-  Future<void> send(String methodName, CouriersLocation location) async {
+  void invoke(String methodName, CouriersLocation location) {
     try {
       // null safety
       if (hubConnection == null) return;
 
-      await hubConnection.invoke(methodName, args: <Object>[
+      hubConnection.invoke(methodName, args: <Object>[
         location.latitude,
         location.longitude,
       ]);

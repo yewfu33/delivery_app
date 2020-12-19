@@ -2,13 +2,17 @@ import 'package:delivery_app/constants.dart';
 import 'package:delivery_app/util.dart';
 import 'package:delivery_app/view_model/login_viewmodel.dart';
 import 'package:delivery_app/widgets/MyInputDecoration.dart';
-import 'package:delivery_app/wrappers/loading_view_wrapper.dart';
+import 'package:delivery_app/wrappers/loading_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:delivery_app/routes_name.dart' as route;
 
 //individual form
 class IndividualLoginView extends StatefulWidget {
+  final BuildContext parentContext;
+  IndividualLoginView({Key key, @required this.parentContext})
+      : super(key: key);
+
   @override
   _IndividualLoginViewState createState() => _IndividualLoginViewState();
 }
@@ -43,24 +47,40 @@ class _IndividualLoginViewState extends State<IndividualLoginView> {
                 padding: const EdgeInsets.only(bottom: 15.0),
                 child: TextFormField(
                   controller: _controller,
-                  validator: model.phoneFieldValidator,
-                  onSaved: model.phoneFieldOnSave,
+                  validator: (v) {
+                    if (v == '+60 ') {
+                      return 'This field is required';
+                    } else {
+                      return null;
+                    }
+                  },
+                  onSaved: (v) {
+                    model.phoneField = v.substring(4);
+                  },
                   keyboardType: TextInputType.phone,
                   inputFormatters: [
                     CustomPhoneNumberFormatter(),
                   ],
-                  decoration: myDecoration('Phone number*', null),
+                  decoration: myDecoration('Phone number*'),
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.only(bottom: 15.0),
                 child: TextFormField(
-                  validator: model.passwordFieldValidator,
-                  onSaved: model.pwFieldOnSave,
+                  validator: (v) {
+                    if (v.trim().isEmpty) {
+                      return 'This field is required';
+                    } else {
+                      return null;
+                    }
+                  },
+                  onSaved: (v) {
+                    model.passwordField = v;
+                  },
                   obscureText: true,
                   enableSuggestions: false,
                   autocorrect: false,
-                  decoration: myDecoration('Password*', null),
+                  decoration: myDecoration('Password*'),
                 ),
               ),
               Padding(
@@ -72,16 +92,14 @@ class _IndividualLoginViewState extends State<IndividualLoginView> {
                       // bring down the keyboard
                       FocusScope.of(context).unfocus();
 
-                      model.individualLogin(context);
+                      model.individualLogin(widget.parentContext);
                     },
                     color: Constant.primaryColor,
                     textColor: Colors.white,
                     child: Text(
                       'Log-in',
-                      style: TextStyle(
-                        fontSize: 17.0,
-                        letterSpacing: letterSpacing,
-                      ),
+                      style:
+                          const TextStyle(fontSize: 17.0, letterSpacing: 0.4),
                     ),
                   ),
                 ),
@@ -111,7 +129,7 @@ class LoginView extends StatelessWidget {
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 2,
-      child: LoadingViewWrapper(
+      child: LoadingDialog(
         child: Scaffold(
           appBar: AppBar(
             title: Text('Sign-in'),
@@ -145,7 +163,7 @@ class LoginView extends StatelessWidget {
             create: (_) => LoginViewModel(),
             child: TabBarView(
               children: [
-                IndividualLoginView(),
+                IndividualLoginView(parentContext: context),
                 Column(
                   children: <Widget>[
                     FlatButton(

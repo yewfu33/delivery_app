@@ -2,24 +2,20 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:delivery_app/helper/throttle.dart';
-import 'package:delivery_app/locator.dart';
 import 'package:delivery_app/models/uiModels/login_model.dart';
 import 'package:delivery_app/models/uiModels/register_model.dart';
 import 'package:delivery_app/models/user_type.dart';
 import 'package:delivery_app/services/account_service.dart';
-import 'package:delivery_app/services/navigation_service.dart';
 import 'package:delivery_app/services/notification_service.dart';
 import 'package:delivery_app/view_model/base_viewmodel.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
-import 'package:delivery_app/routes_name.dart' as route;
+
+import '../main.dart';
 
 class RegisterViewModel extends BaseViewModel {
-  final AccountService accountService = locator<AccountService>();
-  final NavigationService navigationService = locator<NavigationService>();
-  final NotificationService notificationService =
-      locator<NotificationService>();
+  final AccountService accountService = AccountService();
+  final NotificationService notificationService = NotificationService();
 
   bool autoValidateForm = false;
   static int generatedVerificationCode;
@@ -33,7 +29,7 @@ class RegisterViewModel extends BaseViewModel {
 
   //throttle api call, only can call another one after 10sec pass
   final Function throttleSendVerificationCode = throttle(10, () {
-    locator<AccountService>().sendVerificationCode(generatedVerificationCode);
+    AccountService.sendVerificationCode(generatedVerificationCode);
     _scaffoldKey.currentState.showSnackBar(
       SnackBar(
         duration: Duration(milliseconds: 500),
@@ -58,13 +54,13 @@ class RegisterViewModel extends BaseViewModel {
     }
   }
 
-  void registerAccount(BuildContext context) async {
+  Future registerAccount(BuildContext context) async {
     if (validateForm()) {
       //show loading banner
-      onLoading(true);
+      onLoading(true, context);
 
       try {
-        RegisterModel model = new RegisterModel(
+        final RegisterModel model = new RegisterModel(
           name: this.nameField,
           password: this.passwordField,
           phoneNum: this.phoneNumField,
@@ -72,48 +68,47 @@ class RegisterViewModel extends BaseViewModel {
           userType: UserType.User,
         );
 
-        Response res = await accountService.register(model);
+        // register
+        var registerRes = await accountService.register(model);
 
-        if (res == null) throw Exception('fail to reach /register');
+        if (registerRes == null) throw Exception('fail to reach /register');
 
-        if (res.statusCode == 200) {
-          Map<String, dynamic> registerResBody = json.decode(res.body);
+        if (registerRes.statusCode == 200) {
+          var registerResBody = json.decode(registerRes.body);
 
-          LoginModel loginModel = new LoginModel(
+          final LoginModel loginModel = new LoginModel(
             phoneNum: registerResBody['phone_num'],
             password: registerResBody['password'],
           );
 
-          //register
-          accountService.login(loginModel).then((res) {
-            if (res.statusCode == 200) {
-              Map<String, dynamic> loginResBody = json.decode(res.body);
+          // perform login
+          var loginRes = await accountService.login(loginModel);
 
-              accountService.setPrefs(loginResBody);
+          if (loginRes.statusCode == 200) {
+            var loginResBody = json.decode(loginRes.body);
 
-              _formKey.currentState.reset();
+            await accountService.setPrefs(loginResBody);
 
-              //hide loading banner
-              onLoading(false);
+            _formKey.currentState.reset();
 
-              navigationService.navigateToAndRemoveUntil(route.mainpage);
-            } else {
-              // error 400 maybe
-              onLoading(false);
-              showErrorDialog(context, message: res.reasonPhrase);
-            }
-          }).catchError((e) {
-            onLoading(false);
-            showErrorDialog(context, message: e.toString());
-          });
+            //hide loading banner
+            onLoading(false, context);
+
+            Navigator.pushAndRemoveUntil(context,
+                MaterialPageRoute(builder: (_) => Home()), (route) => false);
+          } else {
+            // error 400 maybe
+            onLoading(false, context);
+            showErrorDialog(context, message: loginRes.reasonPhrase);
+          }
         } else {
           // error 400 maybe
-          onLoading(false);
-          showErrorDialog(context, message: res.reasonPhrase);
+          onLoading(false, context);
+          showErrorDialog(context, message: registerRes.reasonPhrase);
         }
       } catch (e) {
         // error 400 maybe
-        onLoading(false);
+        onLoading(false, context);
         showErrorDialog(context, message: e.toString());
       }
     }
@@ -124,56 +119,5 @@ class RegisterViewModel extends BaseViewModel {
     RegisterViewModel.generatedVerificationCode = rng.nextInt(max - min) + min;
 
     throttleSendVerificationCode();
-  }
-
-  String nameFieldValidator(String value) {
-    if (value.trim().isEmpty) {
-      return 'This field is required';
-    } else {
-      return null;
-    }
-  }
-
-  String passwordFieldValidator(String value) {
-    if (value.trim().isEmpty) {
-      return 'This field is required';
-    } else {
-      return null;
-    }
-  }
-
-  String phoneFieldValidator(String value) {
-    if (value == '+60 ') {
-      return 'This field is required';
-    } else {
-      return null;
-    }
-  }
-
-  String verificationCodeFieldValidator(String value) {
-    if (value.trim().isEmpty) {
-      return 'This field is required';
-    } else {
-      if (value != RegisterViewModel.generatedVerificationCode.toString()) {
-        return 'Invalid code';
-      }
-      return null;
-    }
-  }
-
-  void nameFieldOnSave(String value) {
-    this.nameField = value;
-  }
-
-  void pwFieldOnSave(String value) {
-    this.passwordField = value;
-  }
-
-  void phoneFieldOnSave(String value) {
-    this.phoneNumField = value.substring(4);
-  }
-
-  void codeFieldOnSave(String value) {
-    this.verificationCodeField = value;
   }
 }

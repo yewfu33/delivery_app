@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:http/http.dart' as http;
 import 'package:http/io_client.dart' as http;
 
 class ApiService {
@@ -19,13 +18,13 @@ class ApiService {
   Future<String> getAuthToken() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    return 'Bearer ${prefs.getString('token')}' ?? "";
+    return 'Bearer ${prefs.getString('token')}';
   }
 
   Future<int> getUserId() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    return prefs.getInt('uid') ?? null;
+    return prefs.getInt('uid');
   }
 
   dynamic myEncode(dynamic item) {

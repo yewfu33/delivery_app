@@ -1,18 +1,16 @@
 import 'dart:convert';
 
 import 'package:delivery_app/models/uiModels/login_model.dart';
-import 'package:delivery_app/routes_name.dart' as route;
 
-import 'package:delivery_app/locator.dart';
 import 'package:delivery_app/services/account_service.dart';
-import 'package:delivery_app/services/navigation_service.dart';
 import 'package:delivery_app/view_model/base_viewmodel.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../main.dart';
+
 class LoginViewModel extends BaseViewModel {
-  final AccountService accountService = locator<AccountService>();
-  final NavigationService navigationService = locator<NavigationService>();
+  final AccountService accountService = AccountService();
 
   bool autoValidateForm = true;
 
@@ -33,66 +31,44 @@ class LoginViewModel extends BaseViewModel {
     }
   }
 
-  void individualLogin(BuildContext context) async {
-    // showErrorDialog(context);
+  Future individualLogin(BuildContext context) async {
     if (validateForm()) {
       //show loading banner
-      onLoading(true);
+      onLoading(true, context);
 
-      LoginModel model = new LoginModel(
+      final LoginModel model = new LoginModel(
         phoneNum: this.phoneField,
         password: this.passwordField,
       );
 
-      // login
-      accountService.login(model).then((res) {
-        if (res == null) throw Exception('fail to reach /authenticate');
+      try {
+        // login
+        var loginRes = await accountService.login(model);
 
-        if (res.statusCode == 200) {
-          Map<String, dynamic> body = json.decode(res.body);
+        if (loginRes == null) throw Exception('fail to reach /authenticate');
 
-          accountService.setPrefs(body);
+        if (loginRes.statusCode == 200) {
+          var body = json.decode(loginRes.body);
+
+          await accountService.setPrefs(body);
 
           _formKey.currentState.reset();
 
           //hide loading banner
-          onLoading(false);
+          onLoading(false, context);
 
-          navigationService.navigateToAndRemoveUntil(route.mainpage);
+          Navigator.pushAndRemoveUntil(context,
+              MaterialPageRoute(builder: (_) => Home()), (route) => false);
         } else {
           // error 400 maybe
-          onLoading(false);
-          showErrorDialog(context, message: res.reasonPhrase);
+          onLoading(false, context);
+          showErrorDialog(context, message: loginRes.reasonPhrase);
         }
-      }).catchError((e) {
-        onLoading(false);
+      } catch (e) {
+        onLoading(false, context);
         print(e.toString());
         showErrorDialog(context, message: e.toString());
-      });
+      }
     }
-  }
-
-  String passwordFieldValidator(String value) {
-    if (value.trim().isEmpty) {
-      return 'This field is required';
-    } else {
-      return null;
-    }
-  }
-
-  String phoneFieldValidator(String value) {
-    if (value == '+60 ') {
-      return 'This field is required';
-    } else {
-      return null;
-    }
-  }
-
-  void phoneFieldOnSave(String value) {
-    this.phoneField = value.substring(4);
-  }
-
-  void pwFieldOnSave(String value) {
-    this.passwordField = value;
   }
 }
