@@ -27,7 +27,6 @@ dependencies:
   http: ^0.12.1
   intl: ^0.16.1
   google_maps_place_picker: ^0.9.5
-  get_it: ^4.0.4
   shared_preferences: ^0.5.7+3
   rxdart: ^0.24.1
   signalr_client: ^0.1.6
