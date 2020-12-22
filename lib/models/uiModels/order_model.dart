@@ -1,3 +1,4 @@
+import 'package:delivery_app/models/uiModels/courier_model.dart';
 import 'package:delivery_app/models/uiModels/drop_point_model.dart';
 
 class OrderModel {
@@ -14,6 +15,8 @@ class OrderModel {
   final int vehicleType;
   final int status;
   final int userId;
+  final int courierId;
+  final CourierModel courier;
   final DateTime createdAt;
   final List<DropPointModel> dropPoint;
 
@@ -32,6 +35,10 @@ class OrderModel {
         vehicleType = json['vehicle_type'],
         createdAt = DateTime.parse(json['created_at']),
         userId = json['user_id'],
+        courierId = json['courier_id'],
+        courier = (json['courier'] != null)
+            ? CourierModel.fromJson(json['courier'])
+            : null,
         dropPoint = List<DropPointModel>.from(json['drop_points']
             .map((dp) => DropPointModel.fromJson(dp))
             .toList());

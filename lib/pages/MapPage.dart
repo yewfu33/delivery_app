@@ -1,15 +1,15 @@
 import 'dart:async';
 
+import 'package:delivery_app/models/uiModels/order_model.dart';
 import 'package:delivery_app/services/tracking_service.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class MapPage extends StatefulWidget {
-  final CameraPosition initPosition = CameraPosition(
-    target: LatLng(1.554700, 103.594063),
-    zoom: 16,
-  );
+  final OrderModel order;
+
+  MapPage({Key key, @required this.order}) : super(key: key);
 
   @override
   _MapPageState createState() => _MapPageState();
@@ -78,7 +78,9 @@ class _MapPageState extends State<MapPage> {
       body: Container(
         child: GoogleMap(
           mapType: MapType.normal,
-          initialCameraPosition: widget.initPosition,
+          initialCameraPosition: CameraPosition(
+              target: LatLng(widget.order.latitude, widget.order.longitude),
+              zoom: 15),
           onMapCreated: (GoogleMapController controller) {
             _controller = controller;
           },
