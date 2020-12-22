@@ -30,9 +30,11 @@ class _RegisterViewState extends State<RegisterView> {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (_) => RegisterViewModel(),
-      child: LoadingDialog(
-        child: Consumer<RegisterViewModel>(builder: (_, model, __) {
-          return Scaffold(
+      builder: (_, __) {
+        final model = context.watch<RegisterViewModel>();
+
+        return LoadingDialog(
+          child: Scaffold(
             key: model.scaffoldKey,
             appBar: AppBar(
               title: Text('Create Account'),
@@ -163,9 +165,9 @@ class _RegisterViewState extends State<RegisterView> {
                 ),
               ),
             ),
-          );
-        }),
-      ),
+          ),
+        );
+      },
     );
   }
 }
