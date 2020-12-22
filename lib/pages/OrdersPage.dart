@@ -1,6 +1,7 @@
 import 'package:delivery_app/pages/MapPage.dart';
 import 'package:delivery_app/views/activeorder_view.dart';
 import 'package:delivery_app/constants.dart';
+import 'package:delivery_app/views/completedorder_view.dart';
 import 'package:flutter/material.dart';
 
 class OrdersPage extends StatelessWidget {
@@ -11,7 +12,7 @@ class OrdersPage extends StatelessWidget {
       initialIndex: 0,
       child: Scaffold(
         appBar: AppBar(
-          title: Text('My Orders'),
+          title: const Text('My Orders'),
           actions: [
             IconButton(icon: Icon(Icons.search), onPressed: () {}),
             IconButton(icon: Icon(Icons.more_vert), onPressed: () {}),
@@ -21,7 +22,7 @@ class OrdersPage extends StatelessWidget {
             indicatorColor: Constant.primaryColor,
             tabs: <Widget>[
               Tab(
-                child: Text(
+                child: const Text(
                   'Active',
                   style: const TextStyle(
                     fontSize: 16.0,
@@ -30,7 +31,7 @@ class OrdersPage extends StatelessWidget {
                 ),
               ),
               Tab(
-                child: Text(
+                child: const Text(
                   'Completed',
                   style: const TextStyle(
                     fontSize: 16.0,
@@ -39,7 +40,7 @@ class OrdersPage extends StatelessWidget {
                 ),
               ),
               Tab(
-                child: Text(
+                child: const Text(
                   'Inbox',
                   style: const TextStyle(
                     fontSize: 16.0,
@@ -54,7 +55,7 @@ class OrdersPage extends StatelessWidget {
           children: [
             ActiveOrder(),
             // TestingAddedWidget(),
-            Container(),
+            CompletedOrder(),
             Icon(Icons.directions_bike),
           ],
         ),

@@ -7,20 +7,20 @@ import 'package:delivery_app/widgets/OrderList.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 
-class ActiveOrder extends StatefulWidget {
+class CompletedOrder extends StatefulWidget {
   @override
-  _ActiveOrderState createState() => _ActiveOrderState();
+  _CompletedOrderState createState() => _CompletedOrderState();
 }
 
-class _ActiveOrderState extends State<ActiveOrder> {
+class _CompletedOrderState extends State<CompletedOrder> {
   final OrderService orderService = OrderService();
   int _count = 0;
   List<OrderModel> _orders;
 
-  Future<List<OrderModel>> fetchActiveOrder() async {
+  Future<List<OrderModel>> fetchCompletedOrder() async {
     try {
-      var res = await orderService.getActiveOrders();
-      if (res == null) throw Exception('failed to fetch active order');
+      var res = await orderService.getCompletedOrders();
+      if (res == null) throw Exception('failed to fetch completed order');
 
       if (res.statusCode == 200) {
         List<dynamic> body = json.decode(res.body);
@@ -49,7 +49,7 @@ class _ActiveOrderState extends State<ActiveOrder> {
         ),
       ),
       onRefresh: () async {
-        _orders = await fetchActiveOrder();
+        _orders = await fetchCompletedOrder();
         if (_orders == null) return;
 
         if (mounted) {
@@ -90,7 +90,7 @@ class _ActiveOrderState extends State<ActiveOrder> {
                     ),
                   ),
                   Text(
-                    'No active order at the moment',
+                    'No completed order at the moment',
                     style: TextStyle(fontSize: 14.0, color: Colors.grey[400]),
                   ),
                   const Expanded(

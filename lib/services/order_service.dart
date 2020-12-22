@@ -66,17 +66,34 @@ class OrderService extends ApiService {
     }
   }
 
-  Future<http.Response> getOrdersByUserId() async {
+  Future<http.Response> getActiveOrders() async {
     try {
       int id = await getUserId();
       return await client.get(
-        Constant.serverName + orderPath + '/users/' + id.toString(),
+        Constant.serverName + orderPath + '/users/active/' + id.toString(),
         headers: {
           HttpHeaders.authorizationHeader: await getAuthToken(),
         },
       );
     } on SocketException catch (e) {
-      print("socket exception in \"getOrdersByUserId\", " + e.toString());
+      print("socket exception in \"getActiveOrders\", " + e.toString());
+      return null;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<http.Response> getCompletedOrders() async {
+    try {
+      int id = await getUserId();
+      return await client.get(
+        Constant.serverName + orderPath + '/users/completed/' + id.toString(),
+        headers: {
+          HttpHeaders.authorizationHeader: await getAuthToken(),
+        },
+      );
+    } on SocketException catch (e) {
+      print("socket exception in \"getCompletedOrders\", " + e.toString());
       return null;
     } catch (e) {
       return null;
