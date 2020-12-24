@@ -1,5 +1,6 @@
 import 'package:delivery_app/constants.dart';
 import 'package:delivery_app/models/uiModels/order_model.dart';
+import 'package:delivery_app/pages/MapPage.dart';
 import 'package:delivery_app/util.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
@@ -31,7 +32,10 @@ class _OrderDetailViewState extends State<OrderDetailView> {
           animationDuration: const Duration(milliseconds: 500),
           mainButton: FlatButton(
             onPressed: () {
-              flush.dismiss(true); // result = true
+              flush.dismiss(); // dismiss the flushbar
+              // navigate to order tracking page
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (_) => MapPage(order: widget.o)));
             },
             child: const Text(
               "Track Order",
@@ -164,8 +168,8 @@ class _OrderDetailViewState extends State<OrderDetailView> {
                                   radius: 27,
                                   child: CircleAvatar(
                                     radius: 25,
-                                    backgroundImage: widget.o.courier.profilePic
-                                                ?.isEmpty ??
+                                    backgroundImage: widget.o.courier
+                                                ?.profilePic?.isEmpty ??
                                             true
                                         ? AssetImage('assets/img/avatar.jpg')
                                         : NetworkImage(Constant.serverName +
@@ -175,7 +179,8 @@ class _OrderDetailViewState extends State<OrderDetailView> {
                                 ),
                               ),
                               Text(
-                                widget.o.courier.name,
+                                widget.o.courier?.name ??
+                                    'No courier assigned yet',
                                 style: GoogleFonts.cabin(
                                   fontSize: 16,
                                 ),

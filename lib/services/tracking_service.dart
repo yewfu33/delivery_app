@@ -21,7 +21,7 @@ class TrackingService {
 
   Stream<CouriersLocation> get trackingStream => _trackingController.stream;
 
-  TrackingService.init(String uid) {
+  TrackingService.init(int uid) {
     // Creates the connection by using the HubConnectionBuilder.
     hubConnection = HubConnectionBuilder().withUrl(serverUrl).build();
 

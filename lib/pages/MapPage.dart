@@ -1,8 +1,10 @@
 import 'dart:async';
 
+import 'package:delivery_app/models/courierslocation.dart';
 import 'package:delivery_app/models/uiModels/order_model.dart';
 import 'package:delivery_app/services/tracking_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -36,7 +38,7 @@ class _MapPageState extends State<MapPage> {
     );
 
     // animate the camera
-    _controller.animateCamera(CameraUpdate.newLatLngZoom(LatLng(lat, lon), 16));
+    _controller.animateCamera(CameraUpdate.newLatLngZoom(LatLng(lat, lon), 18));
 
     // populate state
     setState(() {
@@ -45,18 +47,39 @@ class _MapPageState extends State<MapPage> {
     });
   }
 
+  final mockLocation = [
+    CouriersLocation(latitude: 1.554700, longitude: 103.594063),
+    CouriersLocation(latitude: 1.554053, longitude: 103.591690),
+    CouriersLocation(latitude: 1.553345, longitude: 103.589972),
+    CouriersLocation(latitude: 1.560295, longitude: 103.586430),
+    CouriersLocation(latitude: 1.557373, longitude: 103.583888),
+    CouriersLocation(latitude: 1.565250, longitude: 103.583105),
+    CouriersLocation(latitude: 1.542835, longitude: 103.577526),
+    CouriersLocation(latitude: 1.539017, longitude: 103.577612),
+  ];
+
+  Stream<CouriersLocation> mockLocationStream() async* {
+    for (var l in mockLocation) {
+      yield l;
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     prefs.then((p) {
-      var uid = p.getString("uid");
+      var uid = p.getInt("uid");
       trackingService = TrackingService.init(uid);
 
-      WidgetsBinding.instance.addPostFrameCallback((_) {
+      print('uid =' + uid.toString());
+
+      SchedulerBinding.instance.addPostFrameCallback((_) {
         _subscription = trackingService.trackingStream.listen((l) {
-          setState(() {
+          if (mounted) {
+            print(
+                "uid =" + l.latitude.toString() + " " + l.longitude.toString());
             addMarker(l.latitude, l.longitude);
-          });
+          }
         });
       });
     });
@@ -64,7 +87,7 @@ class _MapPageState extends State<MapPage> {
 
   @override
   void dispose() {
-    _subscription.cancel();
+    if (_subscription != null) _subscription.cancel();
     super.dispose();
   }
 
