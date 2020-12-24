@@ -34,7 +34,8 @@ class AddOrderView extends StatelessWidget {
                 onPressed: () {
                   model.formKey.currentState.reset();
                 },
-                child: Text('clear', style: TextStyle(color: Colors.white)),
+                child:
+                    Text('Clear', style: const TextStyle(color: Colors.white)),
               ),
             ],
           ),
@@ -176,7 +177,9 @@ class _NotifyPreferencesState extends State<NotifyPreferences> {
                   value: notifyMe,
                   onChanged: (_) {
                     model.notifySenderOnChanged();
-                    notifyMe = !notifyMe;
+                    setState(() {
+                      notifyMe = !notifyMe;
+                    });
                   },
                 ),
               ],
@@ -194,7 +197,9 @@ class _NotifyPreferencesState extends State<NotifyPreferences> {
                   value: notifyRecipient,
                   onChanged: (_) {
                     model.notifyRecipientOnChanged();
-                    notifyRecipient = !notifyRecipient;
+                    setState(() {
+                      notifyRecipient = !notifyRecipient;
+                    });
                   },
                 ),
               ],
@@ -210,22 +215,85 @@ class BottomActionBar extends StatelessWidget {
   final Function callBack;
   const BottomActionBar({Key key, @required this.callBack}) : super(key: key);
 
+  void showPricingDetail(BuildContext context, double distance, double price) {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (_) => Theme(
+        data: ThemeData(
+          colorScheme: ColorScheme.light().copyWith(
+            primary: Constant.primaryColor,
+          ),
+        ),
+        child: AlertDialog(
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text("Distance"),
+                  Text("${distance.round()} KM"),
+                ],
+              ),
+              const SizedBox(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text("Delivery Fee"),
+                  Text("RM ${price.round()}"),
+                ],
+              ),
+            ],
+          ),
+          actions: [
+            FlatButton(
+              onPressed: () {
+                Navigator.of(_).pop();
+              },
+              child: const Text('OK'),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    final price =
+        context.select((AddOrderViewModel model) => model.order.price);
+    final distance =
+        context.select((AddOrderViewModel model) => model.distance);
+
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 22),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Text(
-            'RM 10',
-            style: const TextStyle(
-              color: Constant.primaryColor,
-              fontSize: 19.0,
-              letterSpacing: 0.4,
-              fontWeight: FontWeight.w600,
+          GestureDetector(
+            onTap: () {
+              showPricingDetail(context, distance, price);
+            },
+            child: Container(
+              child: Row(
+                children: [
+                  Text(
+                    'RM $price ',
+                    style: const TextStyle(
+                      color: Constant.primaryColor,
+                      fontSize: 20.0,
+                      letterSpacing: 0.4,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const Icon(Icons.help_outline, size: 18, color: Colors.grey),
+                ],
+              ),
             ),
           ),
+          Spacer(),
           RaisedButton(
             onPressed: () {
               callBack();

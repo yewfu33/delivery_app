@@ -61,6 +61,7 @@ Future<PickedLocation> showPlacePicker(BuildContext context) async {
       builder: (context) => PlacePicker(
         apiKey: FlutterConfig.get('GOOGLE_MAPS_API_KEY'),
         enableMapTypeButton: false,
+        region: "MY",
         autoCompleteDebounceInMilliseconds: 1000,
         cameraMoveDebounceInMilliseconds: 1000,
         hintText: 'Search places here...',
@@ -71,11 +72,10 @@ Future<PickedLocation> showPlacePicker(BuildContext context) async {
           //   print(result.geometry.location.lat);
           //   print(result.geometry.location.lng);
 
-          var pickedLocation = PickedLocation();
-
-          pickedLocation.address = result.formattedAddress;
-          pickedLocation.latitude = result.geometry.location.lat;
-          pickedLocation.longtitude = result.geometry.location.lng;
+          var pickedLocation = PickedLocation()
+            ..address = result.formattedAddress
+            ..latitude = result.geometry.location.lat
+            ..longtitude = result.geometry.location.lng;
 
           // pop back screen with data
           Navigator.pop(context, pickedLocation);
@@ -120,6 +120,10 @@ Step dropOffPoint(BuildContext context, AddOrderViewModel model, int index) {
 
               model.order.dropPoint[index].addressFieldController.text =
                   p.address;
+
+              model.order.dropPoint[index].address = p.address;
+
+              model.addressesFieldOnChanged();
             },
             decoration: InputDecoration(
               hintText: 'Address',
@@ -278,8 +282,7 @@ class _PickUpPointPanelState extends State<PickUpPointPanel> {
 
   @override
   Widget build(BuildContext context) {
-    final AddOrderViewModel model =
-        Provider.of<AddOrderViewModel>(context, listen: false);
+    final AddOrderViewModel model = Provider.of<AddOrderViewModel>(context);
 
     return Column(
       children: [
@@ -322,6 +325,10 @@ class _PickUpPointPanelState extends State<PickUpPointPanel> {
                         model.order.longitude = p.longtitude;
 
                         _addressFieldController.text = p.address;
+
+                        model.order.address = p.address;
+
+                        model.addressesFieldOnChanged();
                       },
                       decoration: InputDecoration(
                         hintText: 'Address',

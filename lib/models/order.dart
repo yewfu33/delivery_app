@@ -11,8 +11,9 @@ class Order {
   String comment = '';
   String contact;
   DateTime dateTime = DateTime.now();
-  double price = 0;
-  //default status
+  double _price = 0;
+  get price => (_price == 0) ? _basePrice : _price;
+  //default status = 0 -> active
   int status = 0;
   int userId;
   bool notifyMebySMS = false;
@@ -21,6 +22,22 @@ class Order {
   List<DropPoint> dropPoint = <DropPoint>[
     new DropPoint(),
   ];
+
+  final double _basePrice = 4.0;
+  final double _pricePerKM = 2;
+
+  void calculatePriceFromDistance(int distanceInMeter) {
+    double distanceInKM = distanceInMeter / 1000;
+    if (distanceInKM < 1) {
+      this._price = _basePrice.roundToDouble();
+    } else {
+      this._price = (_basePrice + (distanceInKM * _pricePerKM)).roundToDouble();
+    }
+  }
+
+  void resetPrice() {
+    this._price = 0;
+  }
 
   Map toMap() {
     List<Map> dp = this.dropPoint != null
@@ -36,7 +53,7 @@ class Order {
       'comment': comment,
       'contact_num': contact,
       'pick_up_datetime': dateTime,
-      'price': price,
+      'price': _price,
       'delivery_status': status,
       'vehicle_type': vehicleType,
       'user_id': userId,
