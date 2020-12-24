@@ -16,21 +16,45 @@ void showOrderCreatedDialog(
       onWillPop: () async {
         return false;
       },
-      child: AlertDialog(
-        title: Text(title),
-        content: Text(content),
-        actions: [
-          FlatButton(
-            onPressed: () {
-              Navigator.pushNamedAndRemoveUntil(
-                  context, route.mainpage, (route) => false);
-            },
-            child: Text('OK'),
-          )
-        ],
+      child: Theme(
+        data: ThemeData(
+          colorScheme: ColorScheme.light().copyWith(
+            primary: Constant.primaryColor,
+          ),
+        ),
+        child: AlertDialog(
+          title: Text(title),
+          content: Text(content),
+          actions: [
+            FlatButton(
+              onPressed: () {
+                Navigator.pushNamedAndRemoveUntil(
+                    context, route.mainpage, (route) => false);
+              },
+              child: const Text('OK'),
+            )
+          ],
+        ),
       ),
     ),
   );
+}
+
+// get weight info
+String setWeightInfo(int weight) {
+  switch (weight) {
+    case 0:
+      return 'Less than 10KG';
+      break;
+    case 10:
+      return 'More than 10KG';
+      break;
+    case 50:
+      return 'More than 50KG';
+      break;
+    default:
+      return 'Less than 10KG';
+  }
 }
 
 class OrderConfirmationPage extends StatelessWidget {
@@ -45,7 +69,7 @@ class OrderConfirmationPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Order Confirmation'),
+        title: const Text('Order Confirmation'),
         leading: BackButton(
           onPressed: () {
             Navigator.pop(context);
@@ -55,99 +79,238 @@ class OrderConfirmationPage extends StatelessWidget {
       bottomNavigationBar:
           BottomActionBar(callBack: createOrder, order: newOrder),
       body: ConstrainedBox(
-        constraints: BoxConstraints(
-          minHeight: MediaQuery.of(context).size.height,
-        ),
+        constraints: BoxConstraints.expand(),
         child: Stack(
           children: [
             SingleChildScrollView(
               child: Container(
-                padding:
-                    EdgeInsets.only(top: 24, left: 15, right: 15, bottom: 35),
+                padding: const EdgeInsets.only(
+                    top: 24, left: 15, right: 15, bottom: 35),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       newOrder.name,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
                     Text(
-                      'Less than 10KG, ' + setVehicleType(newOrder.vehicleType),
-                      style: TextStyle(fontSize: 15.5),
+                      setWeightInfo(newOrder.weight.toInt()) +
+                          ', ' +
+                          setVehicleType(newOrder.vehicleType),
+                      style: const TextStyle(fontSize: 15.5),
                     ),
-                    Divider(height: 30, thickness: 1.5),
+                    const Divider(height: 30, thickness: 1.5),
                     Text(
                       'Pick-up point',
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w500,
                         color: Constant.primaryColor,
                       ),
                     ),
-                    Container(
-                      padding: EdgeInsets.fromLTRB(15, 15, 0, 0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                    Padding(
+                      padding: const EdgeInsets.only(top: 15),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.max,
                         children: [
-                          Text(newOrder.address,
-                              style: TextStyle(fontSize: 15.5)),
-                          SizedBox(height: 10),
-                          Text(
-                              DateFormat('dd MMM yyyy h:mm a')
-                                  .format(newOrder.dateTime),
-                              style: TextStyle(fontSize: 15.5)),
-                          SizedBox(height: 10),
-                          Text('+60 ${newOrder.contact}',
-                              style: TextStyle(fontSize: 15.5)),
-                          SizedBox(height: 10),
-                          Text(newOrder.comment,
-                              style: TextStyle(fontSize: 15.5)),
+                          Icon(
+                            Icons.explore,
+                            color: Colors.grey[600],
+                          ),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: Text(
+                              newOrder.address,
+                              maxLines: 3,
+                              overflow: TextOverflow.ellipsis,
+                              softWrap: true,
+                              style: const TextStyle(fontSize: 15.5),
+                            ),
+                          ),
                         ],
                       ),
                     ),
-                    Divider(height: 30, thickness: 1.5),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          Icon(
+                            Icons.access_time,
+                            color: Colors.grey[600],
+                          ),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: Text(
+                                DateFormat('dd MMM yyyy h:mm a')
+                                    .format(newOrder.dateTime),
+                                style: const TextStyle(fontSize: 15.5)),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          Icon(
+                            Icons.contact_phone,
+                            color: Colors.grey[600],
+                          ),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: Text('+60${newOrder.contact}',
+                                style: const TextStyle(fontSize: 15.5)),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          Icon(
+                            Icons.comment,
+                            color: Colors.grey[600],
+                          ),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: Text(
+                              newOrder.comment,
+                              maxLines: 3,
+                              overflow: TextOverflow.ellipsis,
+                              softWrap: true,
+                              style: const TextStyle(fontSize: 15.5),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const Divider(height: 30, thickness: 1.5),
                     Text(
                       'Drop-off point${(newOrder.dropPoint.length > 1) ? 's' : ''} (${newOrder.dropPoint.length})',
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w500,
                         color: Constant.primaryColor,
                       ),
                     ),
-                    SizedBox(height: 15),
                     ListView.separated(
                       shrinkWrap: true,
                       physics: NeverScrollableScrollPhysics(),
                       itemCount: newOrder.dropPoint.length,
                       itemBuilder: (_, i) {
-                        return Container(
-                          padding: EdgeInsets.only(left: 15),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(newOrder.dropPoint[i].address,
-                                  style: TextStyle(fontSize: 15.5)),
-                              SizedBox(height: 10),
-                              Text(
-                                  DateFormat('dd MMM yyyy h:mm a')
-                                      .format(newOrder.dropPoint[i].dateTime),
-                                  style: TextStyle(fontSize: 15.5)),
-                              SizedBox(height: 10),
-                              Text('+60 ${newOrder.dropPoint[i].contact}',
-                                  style: TextStyle(fontSize: 15.5)),
-                              SizedBox(height: 10),
-                              Text(newOrder.dropPoint[i].comment,
-                                  style: TextStyle(fontSize: 15.5)),
-                            ],
-                          ),
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(top: 15),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisSize: MainAxisSize.max,
+                                children: [
+                                  Icon(
+                                    Icons.explore,
+                                    color: Colors.grey[600],
+                                  ),
+                                  const SizedBox(width: 10),
+                                  Expanded(
+                                    child: Text(
+                                      newOrder.dropPoint[i].address,
+                                      maxLines: 3,
+                                      overflow: TextOverflow.ellipsis,
+                                      softWrap: true,
+                                      style: const TextStyle(fontSize: 15.5),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 10),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisSize: MainAxisSize.max,
+                                children: [
+                                  Icon(
+                                    Icons.access_time,
+                                    color: Colors.grey[600],
+                                  ),
+                                  const SizedBox(width: 10),
+                                  Expanded(
+                                    child: Text(
+                                        DateFormat('dd MMM yyyy h:mm a').format(
+                                            newOrder.dropPoint[i].dateTime),
+                                        style: const TextStyle(fontSize: 15.5)),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 10),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisSize: MainAxisSize.max,
+                                children: [
+                                  Icon(
+                                    Icons.contact_phone,
+                                    color: Colors.grey[600],
+                                  ),
+                                  const SizedBox(width: 10),
+                                  Expanded(
+                                    child: Text(
+                                        '+60${newOrder.dropPoint[i].contact}',
+                                        style: const TextStyle(fontSize: 15.5)),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 10),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisSize: MainAxisSize.max,
+                                children: [
+                                  Icon(
+                                    Icons.comment,
+                                    color: Colors.grey[600],
+                                  ),
+                                  const SizedBox(width: 10),
+                                  Expanded(
+                                    child: Text(
+                                      newOrder.dropPoint[i].comment,
+                                      maxLines: 3,
+                                      overflow: TextOverflow.ellipsis,
+                                      softWrap: true,
+                                      style: const TextStyle(fontSize: 15.5),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
                         );
                       },
                       separatorBuilder: (_, __) {
-                        return Divider(height: 20, thickness: 1.5);
+                        return const Divider(height: 20, thickness: 1.5);
                       },
                     ),
                     Container(
@@ -192,8 +355,8 @@ class _BottomActionBarState extends State<BottomActionBar> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            'RM 10',
-            style: TextStyle(
+            'RM ${widget.order.price}',
+            style: const TextStyle(
               color: Constant.primaryColor,
               fontSize: 19.0,
               letterSpacing: 0.4,
@@ -203,7 +366,7 @@ class _BottomActionBarState extends State<BottomActionBar> {
           if (isLoading)
             FlatButton(
               onPressed: () {},
-              child: CircularProgressIndicator(
+              child: const CircularProgressIndicator(
                   valueColor:
                       AlwaysStoppedAnimation<Color>(Constant.primaryColor)),
             )
@@ -226,11 +389,21 @@ class _BottomActionBarState extends State<BottomActionBar> {
               },
               color: Constant.primaryColor,
               textColor: Colors.white,
-              child: Text(
+              child: const Text(
                 'CREATE ORDER',
-                style: TextStyle(fontSize: 15.0, letterSpacing: 0.4),
+                style: const TextStyle(fontSize: 15.0, letterSpacing: 0.4),
               ),
             ),
+        ],
+      ),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.15),
+            blurRadius: 5,
+            offset: Offset(0, -1.5), // changes position of shadow
+          ),
         ],
       ),
     );

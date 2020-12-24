@@ -46,7 +46,7 @@ class OrderList extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(bottom: 5, top: 7),
               child: Text(
-                'RM 10',
+                'RM ${order.price.round()}',
                 style: TextStyle(
                   fontSize: 17.5,
                   fontWeight: FontWeight.w500,

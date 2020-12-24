@@ -21,6 +21,23 @@ class OrderDetailView extends StatefulWidget {
 class _OrderDetailViewState extends State<OrderDetailView> {
   Flushbar flush;
 
+  // get weight info
+  String setWeightInfo(int weight) {
+    switch (weight) {
+      case 0:
+        return '< 10';
+        break;
+      case 10:
+        return '> 10';
+        break;
+      case 50:
+        return '> 50';
+        break;
+      default:
+        return '< 10>';
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -54,14 +71,11 @@ class _OrderDetailViewState extends State<OrderDetailView> {
         title: Text('Order ${widget.o.orderId}'),
         leading: const BackButton(),
         actions: [
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.mode_edit),
-          ),
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.delete),
-          )
+          if (widget.o.status == 0)
+            IconButton(
+              onPressed: () {},
+              icon: const Icon(Icons.delete),
+            )
         ],
       ),
       body: ConstrainedBox(
@@ -99,7 +113,7 @@ class _OrderDetailViewState extends State<OrderDetailView> {
                             children: <Widget>[
                               Expanded(
                                 child: Text(
-                                  'RM 10',
+                                  'RM ${widget.o.price.round()}',
                                   style: GoogleFonts.firaSans(
                                     fontSize: 22,
                                     fontWeight: FontWeight.w500,
@@ -232,7 +246,8 @@ class _OrderDetailViewState extends State<OrderDetailView> {
                                 children: [
                                   DetailTitleCell(title: 'Weight (KG)'),
                                   DetailPropertiesCell(
-                                      title: '${widget.o.weight.ceil()}'),
+                                      title:
+                                          '${setWeightInfo(widget.o.weight.toInt())}'),
                                 ],
                               ),
                               // Payment Method
