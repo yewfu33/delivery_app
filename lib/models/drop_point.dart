@@ -8,8 +8,6 @@ class DropPoint {
   String contact;
   DateTime dateTime = DateTime.now();
   String comment = '';
-  TextEditingController phoneFieldController =
-      new TextEditingController(text: '+60 ');
   TextEditingController addressFieldController = new TextEditingController();
   TextEditingController dateTimeFieldController = new TextEditingController();
 

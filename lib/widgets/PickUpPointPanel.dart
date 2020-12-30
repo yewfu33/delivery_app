@@ -123,7 +123,7 @@ Step dropOffPoint(BuildContext context, AddOrderViewModel model, int index) {
 
               model.order.dropPoint[index].address = p.address;
 
-              model.addressesFieldOnChanged();
+              model.addressesFieldOnChanged(context);
             },
             decoration: InputDecoration(
               hintText: 'Address',
@@ -135,7 +135,7 @@ Step dropOffPoint(BuildContext context, AddOrderViewModel model, int index) {
           ),
           const SizedBox(height: 13),
           TextFormField(
-            controller: model.order.dropPoint[index].phoneFieldController,
+            initialValue: "+60 ",
             validator: (v) {
               if (v == '+60 ') {
                 return 'This field is required';
@@ -202,7 +202,10 @@ Step dropOffPoint(BuildContext context, AddOrderViewModel model, int index) {
           ),
           if ((model.order.dropPoint.length == (index + 1) &&
               model.order.dropPoint.length > 1))
-            RemoveAddressButton(voidCallBack: () => model.removeLastDropPoint())
+            RemoveAddressButton(voidCallBack: () {
+              model.removeLastDropPoint();
+              model.addressesFieldOnChanged(context);
+            })
           else
             SizedBox.shrink(),
         ],
@@ -260,14 +263,12 @@ class _PickUpPointPanelState extends State<PickUpPointPanel> {
 
   TextEditingController _addressFieldController;
   TextEditingController _dateTimeFieldController;
-  TextEditingController _contactFieldController;
 
   @override
   void initState() {
     super.initState();
     _addressFieldController = TextEditingController();
     _dateTimeFieldController = TextEditingController();
-    _contactFieldController = TextEditingController(text: '+60 ');
   }
 
   @override
@@ -276,7 +277,6 @@ class _PickUpPointPanelState extends State<PickUpPointPanel> {
     // widget tree.
     _addressFieldController.dispose();
     _dateTimeFieldController.dispose();
-    _contactFieldController.dispose();
     super.dispose();
   }
 
@@ -328,7 +328,7 @@ class _PickUpPointPanelState extends State<PickUpPointPanel> {
 
                         model.order.address = p.address;
 
-                        model.addressesFieldOnChanged();
+                        model.addressesFieldOnChanged(context);
                       },
                       decoration: InputDecoration(
                         hintText: 'Address',
@@ -340,7 +340,7 @@ class _PickUpPointPanelState extends State<PickUpPointPanel> {
                     ),
                     const SizedBox(height: 13),
                     TextFormField(
-                      controller: _contactFieldController,
+                      initialValue: "+60 ",
                       validator: (v) {
                         if (v == '+60 ') {
                           return 'This field is required';
