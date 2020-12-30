@@ -14,6 +14,7 @@ class CompletedOrder extends StatefulWidget {
 
 class _CompletedOrderState extends State<CompletedOrder> {
   final OrderService orderService = OrderService();
+  ScrollController _scrollController;
   int _count = 0;
   List<OrderModel> _orders;
 
@@ -36,11 +37,24 @@ class _CompletedOrderState extends State<CompletedOrder> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    _scrollController = ScrollController();
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return EasyRefresh.custom(
       header: DeliveryHeader(
         backgroundColor: Colors.grey[100],
       ),
+      scrollController: _scrollController,
       firstRefresh: true,
       firstRefreshWidget: Container(
         child: const Center(

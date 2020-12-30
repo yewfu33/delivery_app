@@ -1,4 +1,3 @@
-import 'package:delivery_app/pages/MapPage.dart';
 import 'package:delivery_app/views/activeorder_view.dart';
 import 'package:delivery_app/constants.dart';
 import 'package:delivery_app/views/completedorder_view.dart';
@@ -54,35 +53,11 @@ class OrdersPage extends StatelessWidget {
         body: TabBarView(
           children: [
             ActiveOrder(),
-            // TestingAddedWidget(),
             CompletedOrder(),
             Icon(Icons.directions_bike),
           ],
         ),
       ),
-    );
-  }
-}
-
-class TestingAddedWidget extends StatelessWidget {
-  const TestingAddedWidget({
-    Key key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        RaisedButton(
-          onPressed: () {
-            // locator<LocationService>().resumeStream();
-            Navigator.push(
-                context, MaterialPageRoute(builder: (_) => MapPage()));
-          },
-          child: Text('map'),
-        ),
-      ],
     );
   }
 }
