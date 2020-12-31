@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:delivery_app/constants.dart';
 import 'package:delivery_app/models/uiModels/order_model.dart';
 import 'package:delivery_app/pages/MapPage.dart';
+import 'package:delivery_app/services/order_service.dart';
 import 'package:delivery_app/util.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
@@ -19,6 +22,7 @@ class OrderDetailView extends StatefulWidget {
 }
 
 class _OrderDetailViewState extends State<OrderDetailView> {
+  final OrderService orderService = OrderService();
   Flushbar flush;
 
   // get weight info
@@ -64,6 +68,107 @@ class _OrderDetailViewState extends State<OrderDetailView> {
     });
   }
 
+  Future cancelOrder(BuildContext context) async {
+    try {
+      var res = await orderService.cancelOrder(widget.o.orderId);
+
+      if (res == null) {
+        showDialog(
+          context: context,
+          barrierDismissible: true,
+          barrierColor: Colors.black.withOpacity(0.5),
+          builder: (_) {
+            return AlertDialog(
+              title: Text("Error"),
+              content: Text("Try again later"),
+              actions: [
+                FlatButton(
+                  child: Text("OK",
+                      style: const TextStyle(color: Constant.primaryColor)),
+                  onPressed: () => Navigator.pop(_),
+                ),
+              ],
+            );
+          },
+        );
+      } else {
+        if (res.statusCode == 200) {
+          showDialog(
+            context: context,
+            barrierDismissible: false,
+            barrierColor: Colors.black.withOpacity(0.5),
+            builder: (_) {
+              return WillPopScope(
+                onWillPop: () async => false,
+                child: AlertDialog(
+                  title: Text("Message"),
+                  content: Text("You have cancelled the delivery order"),
+                  actions: [
+                    FlatButton(
+                      child: Text("OK",
+                          style: const TextStyle(color: Constant.primaryColor)),
+                      onPressed: () => Navigator.pushNamedAndRemoveUntil(
+                          context, "/", (_) => false),
+                    ),
+                  ],
+                ),
+              );
+            },
+          );
+        } else {
+          var resbody = json.decode(res.body);
+          showDialog(
+            context: context,
+            barrierDismissible: true,
+            barrierColor: Colors.black.withOpacity(0.5),
+            builder: (_) {
+              return AlertDialog(
+                title: Text("Error"),
+                content: Text(resbody["message"]),
+                actions: [
+                  FlatButton(
+                    child: Text("OK",
+                        style: const TextStyle(color: Constant.primaryColor)),
+                    onPressed: () => Navigator.pushNamedAndRemoveUntil(
+                        context, "/", (_) => false),
+                  ),
+                ],
+              );
+            },
+          );
+        }
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<bool> showConfirmationDialog(BuildContext context) {
+    return showDialog(
+      context: context,
+      barrierDismissible: true,
+      barrierColor: Colors.black.withOpacity(0.5),
+      builder: (_) {
+        return AlertDialog(
+          title: Text("Confimation"),
+          content: Text("Are you sure to cancel the order?"),
+          actions: [
+            FlatButton(
+              child: Text("CANCEL",
+                  style: const TextStyle(color: Constant.primaryColor)),
+              onPressed: () => Navigator.pop(_, false),
+            ),
+            FlatButton(
+              child: Text("OK",
+                  style: const TextStyle(color: Constant.primaryColor)),
+              onPressed: () => Navigator.pop(_, true),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -72,9 +177,17 @@ class _OrderDetailViewState extends State<OrderDetailView> {
         leading: const BackButton(),
         actions: [
           if (widget.o.status == 0)
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(Icons.delete),
+            FlatButton(
+              onPressed: () async {
+                var confirmation = await showConfirmationDialog(context);
+                if (confirmation != null) {
+                  if (confirmation) {
+                    cancelOrder(context);
+                  }
+                }
+              },
+              child: const Text("Cancel"),
+              textColor: Colors.white,
             )
         ],
       ),
@@ -97,15 +210,7 @@ class _OrderDetailViewState extends State<OrderDetailView> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          Row(
-                            children: [
-                              Chip(label: Text("Cash")),
-                              const SizedBox(width: 10),
-                              Chip(
-                                  label: Text(
-                                      setVehicleType(widget.o.vehicleType))),
-                            ],
-                          ),
+                          const SizedBox(height: 15),
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisSize: MainAxisSize.max,
@@ -113,7 +218,7 @@ class _OrderDetailViewState extends State<OrderDetailView> {
                             children: <Widget>[
                               Expanded(
                                 child: Text(
-                                  'RM ${widget.o.price.round()}',
+                                  'RM ${widget.o.price}',
                                   style: GoogleFonts.firaSans(
                                     fontSize: 22,
                                     fontWeight: FontWeight.w500,

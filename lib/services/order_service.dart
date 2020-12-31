@@ -26,7 +26,7 @@ class OrderService extends ApiService {
         },
       );
     } on SocketException catch (e) {
-      print("socket exception in \"postOrder\", " + e.toString());
+      print(" \"postOrder\", " + e.toString());
       return null;
     } catch (e) {
       print(e);
@@ -43,7 +43,7 @@ class OrderService extends ApiService {
         },
       );
     } on SocketException catch (e) {
-      print("socket exception in \"getOrderById\", " + e.toString());
+      print("\"getOrderById\", " + e.toString());
       return null;
     } catch (e) {
       return null;
@@ -59,7 +59,7 @@ class OrderService extends ApiService {
         },
       );
     } on SocketException catch (e) {
-      print("socket exception in \"getAllOrders\", " + e.toString());
+      print("\"getAllOrders\", " + e.toString());
       return null;
     } catch (e) {
       return null;
@@ -76,7 +76,7 @@ class OrderService extends ApiService {
         },
       );
     } on SocketException catch (e) {
-      print("socket exception in \"getActiveOrders\", " + e.toString());
+      print("\"getActiveOrders\", " + e.toString());
       return null;
     } catch (e) {
       return null;
@@ -93,7 +93,39 @@ class OrderService extends ApiService {
         },
       );
     } on SocketException catch (e) {
-      print("socket exception in \"getCompletedOrders\", " + e.toString());
+      print("\"getCompletedOrders\", " + e.toString());
+      return null;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<http.Response> searchOrders(String query) async {
+    try {
+      return await client.post(
+        Constant.serverName + orderPath + '/search?query=$query',
+        headers: {
+          HttpHeaders.authorizationHeader: await getAuthToken(),
+        },
+      );
+    } on SocketException catch (e) {
+      print("\"searchOrders\", " + e.toString());
+      return null;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<http.Response> cancelOrder(int id) async {
+    try {
+      return await client.post(
+        Constant.serverName + orderPath + '/cancel/$id',
+        headers: {
+          HttpHeaders.authorizationHeader: await getAuthToken(),
+        },
+      );
+    } on SocketException catch (e) {
+      print("\"cancelOrder\", " + e.toString());
       return null;
     } catch (e) {
       return null;
