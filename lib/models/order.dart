@@ -19,6 +19,7 @@ class Order {
   get discount => _discount;
 
   String promoCode = "";
+  int promoCodeId = 0;
 
   //default status = 0 -> active
   int status = 0;
@@ -77,6 +78,7 @@ class Order {
       'delivery_status': status,
       'vehicle_type': vehicleType,
       'user_id': userId,
+      'promo_code_id': promoCodeId,
       'notify_sender': notifyMebySMS,
       'notify_recipient': notifyRecipientbySMS,
       'created_at': DateTime.now(),

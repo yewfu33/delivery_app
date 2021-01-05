@@ -190,6 +190,7 @@ class AddOrderViewModel with ChangeNotifier {
 
           // set order promo code for only one time apply
           order.promoCode = promoCode;
+          order.promoCodeId = resBody["id"];
 
           // notify changes
           notifyListeners();
