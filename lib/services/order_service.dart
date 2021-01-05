@@ -15,7 +15,6 @@ class OrderService extends ApiService {
   OrderService._();
 
   Future<http.Response> postOrder(Order order) async {
-    print(json.encode(order.toMap(), toEncodable: myEncode));
     try {
       return await client.post(
         Constant.serverName + orderPath,
@@ -25,11 +24,9 @@ class OrderService extends ApiService {
           HttpHeaders.authorizationHeader: await getAuthToken(),
         },
       );
-    } on SocketException catch (e) {
-      print(" \"postOrder\", " + e.toString());
+    } on SocketException {
       return null;
     } catch (e) {
-      print(e);
       return null;
     }
   }
@@ -37,13 +34,12 @@ class OrderService extends ApiService {
   Future<http.Response> getOrderById(int id) async {
     try {
       return await client.get(
-        Constant.serverName + orderPath + '/' + id.toString(),
+        '${Constant.serverName}$orderPath/$id',
         headers: {
           HttpHeaders.authorizationHeader: await getAuthToken(),
         },
       );
-    } on SocketException catch (e) {
-      print("\"getOrderById\", " + e.toString());
+    } on SocketException {
       return null;
     } catch (e) {
       return null;
@@ -58,8 +54,7 @@ class OrderService extends ApiService {
           HttpHeaders.authorizationHeader: await getAuthToken(),
         },
       );
-    } on SocketException catch (e) {
-      print("\"getAllOrders\", " + e.toString());
+    } on SocketException {
       return null;
     } catch (e) {
       return null;
@@ -68,15 +63,14 @@ class OrderService extends ApiService {
 
   Future<http.Response> getActiveOrders() async {
     try {
-      int id = await getUserId();
+      final int id = await getUserId();
       return await client.get(
-        Constant.serverName + orderPath + '/users/active/' + id.toString(),
+        '${Constant.serverName}$orderPath/users/active/$id',
         headers: {
           HttpHeaders.authorizationHeader: await getAuthToken(),
         },
       );
-    } on SocketException catch (e) {
-      print("\"getActiveOrders\", " + e.toString());
+    } on SocketException {
       return null;
     } catch (e) {
       return null;
@@ -85,15 +79,14 @@ class OrderService extends ApiService {
 
   Future<http.Response> getCompletedOrders() async {
     try {
-      int id = await getUserId();
+      final int id = await getUserId();
       return await client.get(
-        Constant.serverName + orderPath + '/users/completed/' + id.toString(),
+        '${Constant.serverName}$orderPath/users/completed/$id',
         headers: {
           HttpHeaders.authorizationHeader: await getAuthToken(),
         },
       );
-    } on SocketException catch (e) {
-      print("\"getCompletedOrders\", " + e.toString());
+    } on SocketException {
       return null;
     } catch (e) {
       return null;
@@ -103,13 +96,12 @@ class OrderService extends ApiService {
   Future<http.Response> searchOrders(String query) async {
     try {
       return await client.post(
-        Constant.serverName + orderPath + '/search?query=$query',
+        '${Constant.serverName}$orderPath${'/search?query=$query'}',
         headers: {
           HttpHeaders.authorizationHeader: await getAuthToken(),
         },
       );
-    } on SocketException catch (e) {
-      print("\"searchOrders\", " + e.toString());
+    } on SocketException {
       return null;
     } catch (e) {
       return null;
@@ -119,13 +111,12 @@ class OrderService extends ApiService {
   Future<http.Response> cancelOrder(int id) async {
     try {
       return await client.post(
-        Constant.serverName + orderPath + '/cancel/$id',
+        '${Constant.serverName}$orderPath${'/cancel/$id'}',
         headers: {
           HttpHeaders.authorizationHeader: await getAuthToken(),
         },
       );
-    } on SocketException catch (e) {
-      print("\"cancelOrder\", " + e.toString());
+    } on SocketException {
       return null;
     } catch (e) {
       return null;

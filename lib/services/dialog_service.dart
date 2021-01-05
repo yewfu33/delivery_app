@@ -13,7 +13,7 @@ class DialogService {
   Completer _dialogCompleter;
 
   /// Registers a callback function. Typically to show the dialog
-  void registerDialogListener(Function showDialogListener) {
+  set registerDialogListener(Function showDialogListener) {
     _showDialogListener = showDialogListener;
   }
 

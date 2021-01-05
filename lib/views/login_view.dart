@@ -5,12 +5,11 @@ import 'package:delivery_app/widgets/MyInputDecoration.dart';
 import 'package:delivery_app/wrappers/loading_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:delivery_app/routes_name.dart' as route;
 
 //individual form
 class IndividualLoginView extends StatefulWidget {
   final BuildContext parentContext;
-  IndividualLoginView({Key key, @required this.parentContext})
+  const IndividualLoginView({Key key, @required this.parentContext})
       : super(key: key);
 
   @override
@@ -22,7 +21,7 @@ class _IndividualLoginViewState extends State<IndividualLoginView> {
 
   @override
   void initState() {
-    _controller = new TextEditingController(text: '+60 ');
+    _controller = TextEditingController(text: '+60 ');
     super.initState();
   }
 
@@ -38,7 +37,7 @@ class _IndividualLoginViewState extends State<IndividualLoginView> {
 
     return SingleChildScrollView(
       child: Container(
-        padding: EdgeInsets.symmetric(vertical: 25.0, horizontal: 25.0),
+        padding: const EdgeInsets.symmetric(vertical: 25.0, horizontal: 25.0),
         child: Form(
           key: model.formKey,
           child: Column(
@@ -96,10 +95,9 @@ class _IndividualLoginViewState extends State<IndividualLoginView> {
                     },
                     color: Constant.primaryColor,
                     textColor: Colors.white,
-                    child: Text(
+                    child: const Text(
                       'Log-in',
-                      style:
-                          const TextStyle(fontSize: 17.0, letterSpacing: 0.4),
+                      style: TextStyle(fontSize: 17.0, letterSpacing: 0.4),
                     ),
                   ),
                 ),
@@ -112,7 +110,7 @@ class _IndividualLoginViewState extends State<IndividualLoginView> {
                   child: FlatButton(
                     onPressed: () {},
                     textColor: Constant.primaryColor,
-                    child: Text('RESET PASSWORD'),
+                    child: const Text('RESET PASSWORD'),
                   ),
                 ),
               ),
@@ -132,9 +130,9 @@ class LoginView extends StatelessWidget {
       child: LoadingDialog(
         child: Scaffold(
           appBar: AppBar(
-            title: Text('Sign-in'),
+            title: const Text('Sign-in'),
             leading: BackButton(onPressed: () => Navigator.pop(context)),
-            bottom: TabBar(
+            bottom: const TabBar(
               labelColor: Colors.white,
               indicatorColor: Constant.primaryColor,
               tabs: <Widget>[
@@ -165,15 +163,9 @@ class LoginView extends StatelessWidget {
               children: [
                 IndividualLoginView(parentContext: context),
                 Column(
-                  children: <Widget>[
-                    FlatButton(
-                      onPressed: () {
-                        Navigator.pushNamedAndRemoveUntil(
-                            context, route.mainpage, (_) => false);
-                      },
-                      child: Text('home'),
-                    ),
-                    Icon(Icons.directions_transit),
+                  children: const [
+                    Expanded(
+                        child: Center(child: Icon(Icons.directions_transit))),
                   ],
                 ),
               ],

@@ -27,12 +27,12 @@ class RemoveAddressButton extends StatelessWidget {
         FlatButton(
             onPressed: () => voidCallBack(),
             child: Row(
-              children: <Widget>[
-                const Icon(Icons.delete_sweep, color: Constant.primaryColor),
-                const SizedBox(width: 1.5),
+              children: const [
+                Icon(Icons.delete_sweep, color: Constant.primaryColor),
+                SizedBox(width: 1.5),
                 Text(
                   'Remove address',
-                  style: const TextStyle(
+                  style: TextStyle(
                     letterSpacing: 0.4,
                     fontSize: 14,
                     color: Constant.primaryColor,
@@ -53,26 +53,25 @@ class PickedLocation {
 
 Future<PickedLocation> showPlacePicker(BuildContext context) async {
   /// initialize display a location
-  final LatLng displayLocation = LatLng(1.550049, 103.5928664);
+  const LatLng displayLocation = LatLng(1.550049, 103.5928664);
 
   final result = await Navigator.push(
     context,
     MaterialPageRoute(
       builder: (context) => PlacePicker(
-        apiKey: FlutterConfig.get('GOOGLE_MAPS_API_KEY'),
+        apiKey: FlutterConfig.get('GOOGLE_MAPS_API_KEY') as String,
         enableMapTypeButton: false,
         region: "MY",
         autoCompleteDebounceInMilliseconds: 1000,
         cameraMoveDebounceInMilliseconds: 1000,
         hintText: 'Search places here...',
-        usePlaceDetailSearch: false,
         initialPosition: displayLocation,
         useCurrentLocation: true,
         onPlacePicked: (result) {
           //   print(result.geometry.location.lat);
           //   print(result.geometry.location.lng);
 
-          var pickedLocation = PickedLocation()
+          final pickedLocation = PickedLocation()
             ..address = result.formattedAddress
             ..latitude = result.geometry.location.lat
             ..longtitude = result.geometry.location.lng;
@@ -84,13 +83,13 @@ Future<PickedLocation> showPlacePicker(BuildContext context) async {
     ),
   );
 
-  return result;
+  return result as PickedLocation;
 }
 
 Step dropOffPoint(BuildContext context, AddOrderViewModel model, int index) {
   return Step(
     isActive: true,
-    title: Text('Drop-off point', style: TextStyle(fontSize: 17)),
+    title: const Text('Drop-off point', style: TextStyle(fontSize: 17)),
     content: Container(
       padding: EdgeInsets.zero,
       width: double.infinity,
@@ -112,7 +111,7 @@ Step dropOffPoint(BuildContext context, AddOrderViewModel model, int index) {
               model.order.dropPoint[index].address = value;
             },
             onTap: () async {
-              var p = await showPlacePicker(context);
+              final p = await showPlacePicker(context);
               if (p == null) return;
 
               model.order.dropPoint[index].latitude = p.latitude;
@@ -127,8 +126,8 @@ Step dropOffPoint(BuildContext context, AddOrderViewModel model, int index) {
             },
             decoration: InputDecoration(
               hintText: 'Address',
-              suffixIcon: Icon(Icons.gps_fixed),
-              suffixIconConstraints: BoxConstraints.tightFor(),
+              suffixIcon: const Icon(Icons.gps_fixed),
+              suffixIconConstraints: const BoxConstraints.tightFor(),
               contentPadding: const EdgeInsets.symmetric(vertical: 5),
               hintStyle: customInputStyle(),
             ),
@@ -148,11 +147,11 @@ Step dropOffPoint(BuildContext context, AddOrderViewModel model, int index) {
               model.order.dropPoint[index].contact = value.substring(4);
             },
             inputFormatters: [CustomPhoneNumberFormatter()],
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               labelText: 'Contact number',
               suffixIcon: Icon(Icons.contact_phone),
               suffixIconConstraints: BoxConstraints.tightFor(),
-              contentPadding: const EdgeInsets.symmetric(vertical: 0),
+              contentPadding: EdgeInsets.symmetric(),
             ),
           ),
           const SizedBox(height: 13),
@@ -183,7 +182,7 @@ Step dropOffPoint(BuildContext context, AddOrderViewModel model, int index) {
             decoration: InputDecoration(
               hintText: 'When to arrive this address',
               labelText: 'When to arrive this address',
-              contentPadding: const EdgeInsets.symmetric(vertical: 0),
+              contentPadding: const EdgeInsets.symmetric(),
               hintStyle: customInputStyle(),
               labelStyle: customInputStyle(),
             ),
@@ -196,18 +195,18 @@ Step dropOffPoint(BuildContext context, AddOrderViewModel model, int index) {
             },
             decoration: InputDecoration(
               hintText: 'Remark',
-              contentPadding: const EdgeInsets.symmetric(vertical: 0),
+              contentPadding: const EdgeInsets.symmetric(),
               hintStyle: customInputStyle(),
             ),
           ),
-          if ((model.order.dropPoint.length == (index + 1) &&
-              model.order.dropPoint.length > 1))
+          if (model.order.dropPoint.length == (index + 1) &&
+              model.order.dropPoint.length > 1)
             RemoveAddressButton(voidCallBack: () {
               model.removeLastDropPoint();
               model.addressesFieldOnChanged(context);
             })
           else
-            SizedBox.shrink(),
+            const SizedBox.shrink(),
         ],
       ),
     ),
@@ -218,14 +217,13 @@ Future<DateTime> openDatePicker(BuildContext context) {
   return showDatePicker(
     context: context,
     firstDate: DateTime.now(),
-    lastDate: DateTime.now().add(Duration(days: 10)),
+    lastDate: DateTime.now().add(const Duration(days: 10)),
     initialDate: DateTime.now(),
-    initialEntryMode: DatePickerEntryMode.calendar,
     builder: (_, Widget child) {
       return Theme(
         data: ThemeData(
-          colorScheme:
-              ColorScheme.light().copyWith(primary: Constant.primaryColor),
+          colorScheme: const ColorScheme.light()
+              .copyWith(primary: Constant.primaryColor),
         ),
         child: child,
       );
@@ -240,8 +238,8 @@ Future<TimeOfDay> openTimePicker(BuildContext context) {
     builder: (_, Widget child) {
       return Theme(
         data: ThemeData(
-          colorScheme:
-              ColorScheme.light().copyWith(primary: Constant.primaryColor),
+          colorScheme: const ColorScheme.light()
+              .copyWith(primary: Constant.primaryColor),
         ),
         child: child,
       );
@@ -287,7 +285,7 @@ class _PickUpPointPanelState extends State<PickUpPointPanel> {
     return Column(
       children: [
         Stepper(
-          physics: NeverScrollableScrollPhysics(),
+          physics: const NeverScrollableScrollPhysics(),
           currentStep: _index,
           onStepTapped: (int i) => setState(() => _index = i),
           controlsBuilder: (_,
@@ -296,7 +294,8 @@ class _PickUpPointPanelState extends State<PickUpPointPanel> {
           steps: [
             Step(
               isActive: true,
-              title: Text('Pick-up point', style: TextStyle(fontSize: 17)),
+              title:
+                  const Text('Pick-up point', style: TextStyle(fontSize: 17)),
               content: Container(
                 padding: EdgeInsets.zero,
                 width: double.infinity,
@@ -318,7 +317,7 @@ class _PickUpPointPanelState extends State<PickUpPointPanel> {
                       readOnly: true,
                       maxLines: null,
                       onTap: () async {
-                        var p = await showPlacePicker(context);
+                        final p = await showPlacePicker(context);
                         if (p == null) return;
 
                         model.order.latitude = p.latitude;
@@ -333,7 +332,7 @@ class _PickUpPointPanelState extends State<PickUpPointPanel> {
                       decoration: InputDecoration(
                         hintText: 'Address',
                         suffixIcon: const Icon(Icons.gps_fixed),
-                        suffixIconConstraints: BoxConstraints.tightFor(),
+                        suffixIconConstraints: const BoxConstraints.tightFor(),
                         contentPadding: const EdgeInsets.symmetric(vertical: 5),
                         hintStyle: customInputStyle(),
                       ),
@@ -353,11 +352,11 @@ class _PickUpPointPanelState extends State<PickUpPointPanel> {
                       },
                       keyboardType: TextInputType.phone,
                       inputFormatters: [CustomPhoneNumberFormatter()],
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         labelText: 'Contact number',
                         suffixIcon: Icon(Icons.contact_phone),
                         suffixIconConstraints: BoxConstraints.tightFor(),
-                        contentPadding: const EdgeInsets.symmetric(vertical: 0),
+                        contentPadding: EdgeInsets.symmetric(),
                       ),
                     ),
                     const SizedBox(height: 13),
@@ -388,7 +387,7 @@ class _PickUpPointPanelState extends State<PickUpPointPanel> {
                       decoration: InputDecoration(
                         labelText: 'When to arrive this address',
                         hintText: 'When to arrive this address',
-                        contentPadding: const EdgeInsets.symmetric(vertical: 0),
+                        contentPadding: const EdgeInsets.symmetric(),
                         hintStyle: customInputStyle(),
                         labelStyle: customInputStyle(),
                       ),
@@ -400,7 +399,7 @@ class _PickUpPointPanelState extends State<PickUpPointPanel> {
                       },
                       decoration: InputDecoration(
                         hintText: 'Remark',
-                        contentPadding: const EdgeInsets.symmetric(vertical: 0),
+                        contentPadding: const EdgeInsets.symmetric(),
                         hintStyle: customInputStyle(),
                       ),
                     ),
@@ -413,15 +412,14 @@ class _PickUpPointPanelState extends State<PickUpPointPanel> {
           ],
         ),
         Align(
-          alignment: Alignment.center,
           child: FlatButton(
             onPressed: () => model.addDropPoint(),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
+              children: const [
                 Icon(Icons.add_location, color: Constant.primaryColor),
-                const SizedBox(width: 1.5),
+                SizedBox(width: 1.5),
                 Text(
                   'Add more delivery point',
                   style: TextStyle(

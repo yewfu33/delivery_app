@@ -5,8 +5,8 @@ class CourierModel {
   final String phoneNum;
 
   CourierModel.fromJson(Map<String, dynamic> json)
-      : id = json['id'],
-        name = json['name'],
-        profilePic = json['profile_picture'],
-        phoneNum = json['phone_num'];
+      : id = json['id'] as int,
+        name = json['name'] as String,
+        profilePic = json['profile_picture'] as String,
+        phoneNum = json['phone_num'] as String;
 }

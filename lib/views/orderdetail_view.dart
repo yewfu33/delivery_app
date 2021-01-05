@@ -15,7 +15,7 @@ import 'package:google_fonts/google_fonts.dart';
 class OrderDetailView extends StatefulWidget {
   final OrderModel o;
 
-  OrderDetailView({Key key, @required this.o}) : super(key: key);
+  const OrderDetailView({Key key, @required this.o}) : super(key: key);
 
   @override
   _OrderDetailViewState createState() => _OrderDetailViewState();
@@ -60,7 +60,7 @@ class _OrderDetailViewState extends State<OrderDetailView> {
             },
             child: const Text(
               "Track Order",
-              style: const TextStyle(color: Constant.primaryColor),
+              style: TextStyle(color: Constant.primaryColor),
             ),
           ),
         )..show(context);
@@ -70,7 +70,7 @@ class _OrderDetailViewState extends State<OrderDetailView> {
 
   Future cancelOrder(BuildContext context) async {
     try {
-      var res = await orderService.cancelOrder(widget.o.orderId);
+      final res = await orderService.cancelOrder(widget.o.orderId);
 
       if (res == null) {
         showDialog(
@@ -79,13 +79,13 @@ class _OrderDetailViewState extends State<OrderDetailView> {
           barrierColor: Colors.black.withOpacity(0.5),
           builder: (_) {
             return AlertDialog(
-              title: Text("Error"),
-              content: Text("Try again later"),
+              title: const Text("Error"),
+              content: const Text("Try again later"),
               actions: [
                 FlatButton(
-                  child: Text("OK",
-                      style: const TextStyle(color: Constant.primaryColor)),
                   onPressed: () => Navigator.pop(_),
+                  child: const Text("OK",
+                      style: TextStyle(color: Constant.primaryColor)),
                 ),
               ],
             );
@@ -101,14 +101,14 @@ class _OrderDetailViewState extends State<OrderDetailView> {
               return WillPopScope(
                 onWillPop: () async => false,
                 child: AlertDialog(
-                  title: Text("Message"),
-                  content: Text("You have cancelled the delivery order"),
+                  title: const Text("Message"),
+                  content: const Text("You have cancelled the delivery order"),
                   actions: [
                     FlatButton(
-                      child: Text("OK",
-                          style: const TextStyle(color: Constant.primaryColor)),
                       onPressed: () => Navigator.pushNamedAndRemoveUntil(
                           context, "/", (_) => false),
+                      child: const Text("OK",
+                          style: TextStyle(color: Constant.primaryColor)),
                     ),
                   ],
                 ),
@@ -116,21 +116,21 @@ class _OrderDetailViewState extends State<OrderDetailView> {
             },
           );
         } else {
-          var resbody = json.decode(res.body);
+          final resbody = json.decode(res.body);
           showDialog(
             context: context,
             barrierDismissible: true,
             barrierColor: Colors.black.withOpacity(0.5),
             builder: (_) {
               return AlertDialog(
-                title: Text("Error"),
-                content: Text(resbody["message"]),
+                title: const Text("Error"),
+                content: Text(resbody["message"] as String),
                 actions: [
                   FlatButton(
-                    child: Text("OK",
-                        style: const TextStyle(color: Constant.primaryColor)),
                     onPressed: () => Navigator.pushNamedAndRemoveUntil(
                         context, "/", (_) => false),
+                    child: const Text("OK",
+                        style: TextStyle(color: Constant.primaryColor)),
                   ),
                 ],
               );
@@ -150,18 +150,18 @@ class _OrderDetailViewState extends State<OrderDetailView> {
       barrierColor: Colors.black.withOpacity(0.5),
       builder: (_) {
         return AlertDialog(
-          title: Text("Confimation"),
-          content: Text("Are you sure to cancel the order?"),
+          title: const Text("Confimation"),
+          content: const Text("Are you sure to cancel the order?"),
           actions: [
             FlatButton(
-              child: Text("CANCEL",
-                  style: const TextStyle(color: Constant.primaryColor)),
               onPressed: () => Navigator.pop(_, false),
+              child: const Text("CANCEL",
+                  style: TextStyle(color: Constant.primaryColor)),
             ),
             FlatButton(
-              child: Text("OK",
-                  style: const TextStyle(color: Constant.primaryColor)),
               onPressed: () => Navigator.pop(_, true),
+              child: const Text("OK",
+                  style: TextStyle(color: Constant.primaryColor)),
             ),
           ],
         );
@@ -179,21 +179,21 @@ class _OrderDetailViewState extends State<OrderDetailView> {
           if (widget.o.status == 0)
             FlatButton(
               onPressed: () async {
-                var confirmation = await showConfirmationDialog(context);
+                final confirmation = await showConfirmationDialog(context);
                 if (confirmation != null) {
                   if (confirmation) {
                     cancelOrder(context);
                   }
                 }
               },
-              child: const Text("Cancel"),
               textColor: Colors.white,
+              child: const Text("Cancel"),
             )
         ],
       ),
       body: ConstrainedBox(
-        constraints: BoxConstraints.expand(),
-        child: Container(
+        constraints: const BoxConstraints.expand(),
+        child: SizedBox(
           width: double.infinity,
           child: ScrollConfiguration(
             behavior: MyScrollBehavior(),
@@ -212,8 +212,6 @@ class _OrderDetailViewState extends State<OrderDetailView> {
                         children: <Widget>[
                           const SizedBox(height: 15),
                           Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisSize: MainAxisSize.max,
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
                               Expanded(
@@ -237,9 +235,6 @@ class _OrderDetailViewState extends State<OrderDetailView> {
                           ),
                           const SizedBox(height: 17),
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisSize: MainAxisSize.max,
                             children: [
                               const Icon(Icons.explore),
                               const SizedBox(width: 10),
@@ -263,7 +258,7 @@ class _OrderDetailViewState extends State<OrderDetailView> {
                     //Courier Info
                     Container(
                       width: double.infinity,
-                      padding: EdgeInsets.only(
+                      padding: const EdgeInsets.only(
                           top: 5, bottom: 10, left: 13, right: 15),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -278,7 +273,6 @@ class _OrderDetailViewState extends State<OrderDetailView> {
                           ),
                           const SizedBox(height: 10),
                           Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: <Widget>[
                               Padding(
                                 padding: const EdgeInsets.only(right: 25.0),
@@ -287,13 +281,15 @@ class _OrderDetailViewState extends State<OrderDetailView> {
                                   radius: 27,
                                   child: CircleAvatar(
                                     radius: 25,
-                                    backgroundImage: widget.o.courier
+                                    backgroundImage: (widget.o.courier
                                                 ?.profilePic?.isEmpty ??
-                                            true
-                                        ? AssetImage('assets/img/avatar.jpg')
+                                            true)
+                                        ? const AssetImage(
+                                            'assets/img/avatar.jpg')
                                         : NetworkImage(Constant.serverName +
-                                            Constant.imagePath +
-                                            widget.o.courier.profilePic),
+                                                Constant.imagePath +
+                                                widget.o.courier.profilePic)
+                                            as ImageProvider,
                                   ),
                                 ),
                               ),
@@ -313,7 +309,7 @@ class _OrderDetailViewState extends State<OrderDetailView> {
                     // order detail
                     Container(
                       width: double.infinity,
-                      padding: EdgeInsets.only(
+                      padding: const EdgeInsets.only(
                           top: 5, bottom: 10, left: 13, right: 15),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -333,14 +329,14 @@ class _OrderDetailViewState extends State<OrderDetailView> {
                               // Content
                               TableRow(
                                 children: [
-                                  DetailTitleCell(title: 'Content'),
+                                  const DetailTitleCell(title: 'Content'),
                                   DetailPropertiesCell(title: widget.o.name),
                                 ],
                               ),
                               // Delivery type
                               TableRow(
                                 children: [
-                                  DetailTitleCell(title: 'Delivery Type'),
+                                  const DetailTitleCell(title: 'Delivery Type'),
                                   DetailPropertiesCell(
                                       title:
                                           setVehicleType(widget.o.vehicleType)),
@@ -349,14 +345,14 @@ class _OrderDetailViewState extends State<OrderDetailView> {
                               // Weight
                               TableRow(
                                 children: [
-                                  DetailTitleCell(title: 'Weight (KG)'),
+                                  const DetailTitleCell(title: 'Weight (KG)'),
                                   DetailPropertiesCell(
-                                      title:
-                                          '${setWeightInfo(widget.o.weight.toInt())}'),
+                                      title: setWeightInfo(
+                                          widget.o.weight.toInt())),
                                 ],
                               ),
                               // Payment Method
-                              TableRow(
+                              const TableRow(
                                 children: [
                                   DetailTitleCell(title: 'Payment Method'),
                                   DetailPropertiesCell(title: 'Cash'),
@@ -365,7 +361,7 @@ class _OrderDetailViewState extends State<OrderDetailView> {
                               // Created At
                               TableRow(
                                 children: [
-                                  DetailTitleCell(title: 'Created At'),
+                                  const DetailTitleCell(title: 'Created At'),
                                   DetailPropertiesCell(
                                       title: DateFormat('dd MMM yyyy h:mm a')
                                           .format(widget.o.dateTime)),
@@ -396,15 +392,15 @@ class DetailViewDivider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10),
-      child: const Divider(color: Colors.black),
+    return const Padding(
+      padding: EdgeInsets.symmetric(horizontal: 10),
+      child: Divider(color: Colors.black),
     );
   }
 }
 
 class ActionButton extends StatelessWidget {
-  final text;
+  final String text;
   final Function function;
   final Color color;
 
@@ -423,7 +419,8 @@ class ActionButton extends StatelessWidget {
       },
       color: color,
       textColor: Colors.white,
-      child: Text(text, style: TextStyle(fontSize: 15, letterSpacing: 0.5)),
+      child:
+          Text(text, style: const TextStyle(fontSize: 15, letterSpacing: 0.5)),
     );
   }
 }
@@ -491,7 +488,7 @@ class _DeliveryPointState extends State<DeliveryPoint> {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 10),
       child: Stepper(
-        physics: NeverScrollableScrollPhysics(),
+        physics: const NeverScrollableScrollPhysics(),
         controlsBuilder: (BuildContext context,
                 {VoidCallback onStepContinue, VoidCallback onStepCancel}) =>
             Container(),
@@ -499,7 +496,6 @@ class _DeliveryPointState extends State<DeliveryPoint> {
           Step(
             isActive: true,
             title: Row(
-              mainAxisSize: MainAxisSize.max,
               children: [
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.75,
@@ -518,13 +514,11 @@ class _DeliveryPointState extends State<DeliveryPoint> {
                 date: widget.order.dateTime,
                 contact: widget.order.contact,
                 remark: widget.order.comment),
-            state: StepState.indexed,
           ),
           ...widget.order.dropPoint.map((d) {
             return Step(
               isActive: true,
               title: Row(
-                mainAxisSize: MainAxisSize.max,
                 children: [
                   SizedBox(
                     width: MediaQuery.of(context).size.width * 0.75,
@@ -546,7 +540,6 @@ class _DeliveryPointState extends State<DeliveryPoint> {
                 contact: d.contact,
                 remark: d.comment,
               ),
-              state: StepState.indexed,
             );
           }).toList(),
         ],
@@ -604,26 +597,24 @@ class StepContentProperties extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            title,
-            style: GoogleFonts.cabin(
-              fontSize: 15,
-              color: Colors.grey[600],
-              fontWeight: FontWeight.w500,
-            ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: GoogleFonts.cabin(
+            fontSize: 15,
+            color: Colors.grey[600],
+            fontWeight: FontWeight.w500,
           ),
-          const SizedBox(height: 5),
-          Text((property.isEmpty) ? "-" : property,
-              softWrap: true,
-              maxLines: 4,
-              overflow: TextOverflow.ellipsis,
-              style: GoogleFonts.sourceSansPro(fontSize: 15)),
-        ],
-      ),
+        ),
+        const SizedBox(height: 5),
+        Text((property.isEmpty) ? "-" : property,
+            softWrap: true,
+            maxLines: 4,
+            overflow: TextOverflow.ellipsis,
+            style: GoogleFonts.sourceSansPro(fontSize: 15)),
+      ],
     );
   }
 }

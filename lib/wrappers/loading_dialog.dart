@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 class LoadingDialog extends StatefulWidget {
   final Widget child;
-  LoadingDialog({Key key, this.child}) : super(key: key);
+  const LoadingDialog({Key key, this.child}) : super(key: key);
 
   @override
   _LoadingDialogState createState() => _LoadingDialogState();
@@ -16,7 +16,7 @@ class _LoadingDialogState extends State<LoadingDialog> {
   @override
   void initState() {
     super.initState();
-    dialogService.registerDialogListener(_showDialog);
+    dialogService.registerDialogListener = _showDialog;
   }
 
   @override
@@ -30,7 +30,7 @@ class _LoadingDialogState extends State<LoadingDialog> {
       barrierDismissible: false,
       barrierLabel: '',
       barrierColor: Colors.black.withOpacity(0.5),
-      transitionDuration: Duration(milliseconds: 300),
+      transitionDuration: const Duration(milliseconds: 300),
       pageBuilder: (BuildContext context, Animation animation,
           Animation secondaryAnimation) {
         return WillPopScope(
@@ -40,13 +40,13 @@ class _LoadingDialogState extends State<LoadingDialog> {
           },
           child: AlertDialog(
             insetPadding: EdgeInsets.zero,
-            shape: RoundedRectangleBorder(
+            shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(6.0))),
             content: SizedBox(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
+                children: const [
                   CircularProgressIndicator(
                     valueColor:
                         AlwaysStoppedAnimation<Color>(Constant.primaryColor),

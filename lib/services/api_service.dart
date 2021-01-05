@@ -16,13 +16,13 @@ class ApiService {
   };
 
   Future<String> getAuthToken() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
 
     return 'Bearer ${prefs.getString('token')}';
   }
 
   Future<int> getUserId() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
 
     return prefs.getInt('uid');
   }

@@ -42,10 +42,10 @@ class _PromoCodeSectionState extends State<PromoCodeSection> {
         },
         decoration: InputDecoration(
           hintText: 'Promo Code',
-          contentPadding: const EdgeInsets.symmetric(vertical: 0),
+          contentPadding: const EdgeInsets.symmetric(),
           hintStyle: customInputStyle(),
           suffix: OutlineButton(
-            onPressed: (isLoading)
+            onPressed: isLoading
                 ? null
                 : () async {
                     // bring down the keyboard
@@ -68,7 +68,7 @@ class _PromoCodeSectionState extends State<PromoCodeSection> {
                   },
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(30.0)),
-            child: Text("Apply"),
+            child: const Text("Apply"),
           ),
         ),
       ),

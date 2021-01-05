@@ -1,4 +1,5 @@
 import 'package:delivery_app/main.dart';
+import 'package:delivery_app/models/order.dart';
 import 'package:delivery_app/models/uiModels/order_model.dart';
 import 'package:delivery_app/routes_name.dart' as route;
 import 'package:delivery_app/views/addorder_view.dart';
@@ -23,18 +24,18 @@ class Router {
       case route.registerPage:
         return CustomMaterialPageRoute(builder: (_) => RegisterView());
       case route.orderDetailPage:
-        OrderModel o = settings.arguments;
+        final OrderModel o = settings.arguments as OrderModel;
         return MaterialPageRoute(builder: (_) => OrderDetailView(o: o));
       case route.orderConfirmationPage:
-        List order = settings.arguments;
+        final List order = settings.arguments as List;
         return MaterialPageRoute(
             builder: (_) => OrderConfirmationPage(
-                  newOrder: order[0],
-                  createOrder: order[1],
+                  newOrder: order[0] as Order,
+                  createOrder: order[1] as Future<bool> Function(Order),
                 ));
       default:
         return MaterialPageRoute(
-          builder: (_) => Scaffold(
+          builder: (_) => const Scaffold(
             body: Center(
               child: Icon(Icons.directions_car),
             ),

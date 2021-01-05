@@ -8,8 +8,8 @@ class DropPoint {
   String contact;
   DateTime dateTime = DateTime.now();
   String comment = '';
-  TextEditingController addressFieldController = new TextEditingController();
-  TextEditingController dateTimeFieldController = new TextEditingController();
+  TextEditingController addressFieldController = TextEditingController();
+  TextEditingController dateTimeFieldController = TextEditingController();
 
   Map toMap() => {
         'address': address,

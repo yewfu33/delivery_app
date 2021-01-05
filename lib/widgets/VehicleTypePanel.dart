@@ -23,9 +23,9 @@ class _VehicleTypePanelState extends State<VehicleTypePanel> {
     return SizedBox(
       width: double.infinity,
       child: CupertinoSegmentedControl(
-        children: {
+        children: const {
           0: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8),
+            padding: EdgeInsets.symmetric(vertical: 8),
             child: Text(
               'Motorbike',
               style: TextStyle(
@@ -35,7 +35,7 @@ class _VehicleTypePanelState extends State<VehicleTypePanel> {
             ),
           ),
           1: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8),
+            padding: EdgeInsets.symmetric(vertical: 8),
             child: Text(
               'Car',
               style: TextStyle(
@@ -45,8 +45,8 @@ class _VehicleTypePanelState extends State<VehicleTypePanel> {
             ),
           ),
         },
-        onValueChanged: (i) {
-          model.updateVehicleType(i);
+        onValueChanged: (int i) {
+          model.updateVehicleType = i;
           setState(() => v = i);
         },
         groupValue: v,

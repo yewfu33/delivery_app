@@ -33,77 +33,75 @@ class AddOrderView extends StatelessWidget {
                   model.formKey.currentState.reset();
                 },
                 child:
-                    Text('Clear', style: const TextStyle(color: Colors.white)),
+                    const Text('Clear', style: TextStyle(color: Colors.white)),
               ),
             ],
           ),
           bottomNavigationBar:
               BottomActionBar(callBack: () => model.saveOrder(context)),
           body: ConstrainedBox(
-            constraints: BoxConstraints.expand(),
+            constraints: const BoxConstraints.expand(),
             child: Container(
               width: double.infinity,
               padding: const EdgeInsets.only(top: 5.0),
               child: ScrollConfiguration(
                 behavior: MyScrollBehavior(),
                 child: SingleChildScrollView(
-                  physics: ScrollPhysics(),
-                  child: Container(
-                    child: Form(
-                      key: model.formKey,
-                      autovalidate: model.autoValidateForm,
-                      child: Column(
-                        children: <Widget>[
-                          //vehicleType panel
-                          const VehicleTypePanel(),
-                          //name field
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 8.0, horizontal: 18),
-                            child: TextFormField(
-                              validator: (v) {
-                                if (v.trim().isEmpty) {
-                                  return 'This field is required';
-                                } else {
-                                  return null;
-                                }
-                              },
-                              onSaved: (v) {
-                                model.order.name = v;
-                              },
-                              style: const TextStyle(fontSize: 18),
-                              decoration: InputDecoration(
-                                labelText: 'What are you sending?',
-                                contentPadding: EdgeInsets.zero,
-                                labelStyle: customInputStyle(),
-                              ),
+                  physics: const ScrollPhysics(),
+                  child: Form(
+                    key: model.formKey,
+                    autovalidate: model.autoValidateForm,
+                    child: Column(
+                      children: <Widget>[
+                        //vehicleType panel
+                        const VehicleTypePanel(),
+                        //name field
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 8.0, horizontal: 18),
+                          child: TextFormField(
+                            validator: (v) {
+                              if (v.trim().isEmpty) {
+                                return 'This field is required';
+                              } else {
+                                return null;
+                              }
+                            },
+                            onSaved: (v) {
+                              model.order.name = v;
+                            },
+                            style: const TextStyle(fontSize: 18),
+                            decoration: InputDecoration(
+                              labelText: 'What are you sending?',
+                              contentPadding: EdgeInsets.zero,
+                              labelStyle: customInputStyle(),
                             ),
                           ),
-                          //weight field
-                          WeightField(model: model),
-                          //pick and drop section
-                          const PickUpPointPanel(),
-                          Divider(
-                            height: 20,
-                            color: Colors.grey[200],
-                            thickness: 20,
-                          ),
-                          const PromoCodeSection(),
-                          //notify preferences
-                          const NotifyPreferences(),
-                          Divider(
-                            height: 20,
-                            color: Colors.grey[200],
-                            thickness: 20,
-                          ),
-                          //payment section
-                          const PaymentSettingSection(),
-                          Container(
-                            height: 50,
-                            color: Colors.grey[200],
-                          ),
-                        ],
-                      ),
+                        ),
+                        //weight field
+                        WeightField(model: model),
+                        //pick and drop section
+                        const PickUpPointPanel(),
+                        Divider(
+                          height: 20,
+                          color: Colors.grey[200],
+                          thickness: 20,
+                        ),
+                        const PromoCodeSection(),
+                        //notify preferences
+                        const NotifyPreferences(),
+                        Divider(
+                          height: 20,
+                          color: Colors.grey[200],
+                          thickness: 20,
+                        ),
+                        //payment section
+                        const PaymentSettingSection(),
+                        Container(
+                          height: 50,
+                          color: Colors.grey[200],
+                        ),
+                      ],
                     ),
                   ),
                 ),

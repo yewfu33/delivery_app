@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class Constant {
-  static const Color primaryColor = const Color(0xFFD50000);
+  static const Color primaryColor = Color(0xFFD50000);
 
   static const String port = '57934';
   static const String serverName = 'http://192.168.0.131:$port/';

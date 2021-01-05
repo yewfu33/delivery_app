@@ -21,7 +21,6 @@ class PaymentSettingSection extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 5.0),
             child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 const Icon(Icons.local_atm),
                 const SizedBox(width: 10),

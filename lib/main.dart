@@ -13,7 +13,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_config/flutter_config.dart';
 
-void main() async {
+Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // obtain .env variables
   await FlutterConfig.loadEnvVariables();
@@ -48,7 +48,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   int _currentIndex = 0;
-  Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   Future<bool> _isLoggedIn;
 
   //children page
@@ -58,7 +58,7 @@ class _HomeState extends State<Home> {
     ProfileView(),
   ];
 
-  final bottomBarStyle =
+  static const bottomBarStyle =
       TextStyle(letterSpacing: 0.4, fontWeight: FontWeight.w500);
 
   @override
@@ -98,17 +98,17 @@ class _HomeState extends State<Home> {
                   unselectedItemColor: Colors.white70,
                   currentIndex: _currentIndex,
                   type: BottomNavigationBarType.fixed,
-                  items: [
+                  items: const [
                     BottomNavigationBarItem(
-                      icon: const Icon(Icons.assignment),
+                      icon: Icon(Icons.assignment),
                       title: Text('Orders', style: bottomBarStyle),
                     ),
                     BottomNavigationBarItem(
-                      icon: const Icon(Icons.add_box),
+                      icon: Icon(Icons.add_box),
                       title: Text('Add Order', style: bottomBarStyle),
                     ),
                     BottomNavigationBarItem(
-                      icon: const Icon(Icons.account_box),
+                      icon: Icon(Icons.account_box),
                       title: Text('Profile', style: bottomBarStyle),
                     ),
                   ],

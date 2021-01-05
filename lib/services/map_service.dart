@@ -8,20 +8,20 @@ import 'package:http/http.dart' as http;
 class MapService {
   Future<int> getDistancesByCoordinates(LatLng l1, LatLng l2) async {
     try {
-      var apikey = FlutterConfig.get('GOOGLE_MAPS_API_KEY');
+      final apikey = FlutterConfig.get('GOOGLE_MAPS_API_KEY');
 
-      String url =
+      final String url =
           "https://maps.googleapis.com/maps/api/directions/json?origin=${l1.latitude},${l1.longitude}&destination=${l2.latitude},${l2.longitude}&key=$apikey";
-      http.Response response = await http.get(url);
+      final http.Response response = await http.get(url);
 
-      Map values = jsonDecode(response.body);
+      final Map values = jsonDecode(response.body) as Map;
 
-      int distance = values["routes"][0]["legs"][0]["distance"]["value"];
+      final int distance =
+          values["routes"][0]["legs"][0]["distance"]["value"] as int;
 
       return distance;
     } catch (e) {
-      print(e);
-      throw e;
+      rethrow;
     }
   }
 }

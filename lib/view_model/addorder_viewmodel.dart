@@ -16,9 +16,9 @@ class AddOrderViewModel with ChangeNotifier {
   final OrderService orderService = OrderService();
   final MapService mapService = MapService();
   final _formKey = GlobalKey<FormState>();
-  get formKey => _formKey;
+  GlobalKey<FormState> get formKey => _formKey;
   bool autoValidateForm = false;
-  Order order = new Order();
+  Order order = Order();
 
   int _distance = 0;
   double get distance => _distance / 1000;
@@ -34,23 +34,19 @@ class AddOrderViewModel with ChangeNotifier {
     }
   }
 
-  void saveOrder(BuildContext context) async {
+  Future saveOrder(BuildContext context) async {
     if (validateForm()) {
-      print('valid form');
       try {
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        print('user id: ' + prefs.get('uid').toString());
+        final SharedPreferences prefs = await SharedPreferences.getInstance();
 
-        order.userId = prefs.get('uid');
+        order.userId = prefs.get('uid') as int;
 
         bool isPassingCorrectDiscount = true;
 
         if (order.discount != 0) {
           isPassingCorrectDiscount = await applyPromoCode(
-              context, order.price, order.promoCode,
+              context, order.solidPrice, order.promoCode,
               checking: true);
-
-          print("ispassingcorrectdiscount = $isPassingCorrectDiscount");
         }
 
         if (isPassingCorrectDiscount) {
@@ -64,7 +60,6 @@ class AddOrderViewModel with ChangeNotifier {
           );
         }
       } catch (err) {
-        print(err);
         showResponseDialog(
             context, "Error", "Error create the order, try again later.");
       }
@@ -73,19 +68,16 @@ class AddOrderViewModel with ChangeNotifier {
 
   Future<bool> createOrder(Order o) async {
     try {
-      var res = await orderService.postOrder(o);
+      final res = await orderService.postOrder(o);
       if (res == null) throw Exception('fail to post order');
 
       if (res.statusCode == 201) {
         //success
-        print('created');
         return true;
       } else {
-        print('status code: ' + res.statusCode.toString());
         return false;
       }
     } catch (e) {
-      print(e);
       return false;
     }
   }
@@ -107,12 +99,12 @@ class AddOrderViewModel with ChangeNotifier {
       // reset distance
       _distance = 0;
 
-      var origin = LatLng(order.latitude, order.longitude);
-      var destination = order.dropPoint
+      final origin = LatLng(order.latitude, order.longitude);
+      final destination = order.dropPoint
           .map<LatLng>((d) => LatLng(d.latitude, d.longitude))
           .toList();
 
-      var d1 =
+      final d1 =
           await mapService.getDistancesByCoordinates(origin, destination[0]);
 
       _distance += d1;
@@ -121,7 +113,7 @@ class AddOrderViewModel with ChangeNotifier {
       if (destination.length > 1) {
         for (var i = 0; i < destination.length; i++) {
           if (i % 2 != 0) {
-            var d2 = await mapService.getDistancesByCoordinates(
+            final d2 = await mapService.getDistancesByCoordinates(
                 destination[i - 1], destination[i]);
 
             _distance += d2;
@@ -135,11 +127,9 @@ class AddOrderViewModel with ChangeNotifier {
     return _distance;
   }
 
-  void calculateOrderPrice(BuildContext context) async {
-    int distanceInMeter = await this.calculateDistance();
+  Future calculateOrderPrice(BuildContext context) async {
+    final int distanceInMeter = await calculateDistance() as int;
     order.calculatePriceFromDistance(distanceInMeter);
-
-    print('price = ${order.price}');
 
     if (order.promoCode.isNotEmpty) {
       await applyPromoCode(context, order.price, order.promoCode);
@@ -163,16 +153,16 @@ class AddOrderViewModel with ChangeNotifier {
       BuildContext context, double orderFee, String promoCode,
       {bool checking = false}) async {
     try {
-      final applyPromoCodePath = Constant.serverName + "api/orders/promocode";
-      SharedPreferences prefs = await SharedPreferences.getInstance();
+      final applyPromoCodePath = "${Constant.serverName}api/orders/promocode";
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
 
-      var postBody = {
+      final postBody = {
         "order_fee": orderFee,
         "promo_code": promoCode,
         "user_id": prefs.getInt("uid"),
       };
 
-      http.Response res = await http.post(
+      final http.Response res = await http.post(
         applyPromoCodePath,
         headers: {
           "content-type": "application/json",
@@ -182,15 +172,15 @@ class AddOrderViewModel with ChangeNotifier {
       );
 
       if (res.statusCode == 200) {
-        var resBody = jsonDecode(res.body);
+        final resBody = jsonDecode(res.body);
 
         if (resBody["discount"] != null && !checking) {
-          order.setDiscountValue = resBody["discount"];
+          order.setDiscountValue = resBody["discount"] as double;
           order.applyDiscountIfAny();
 
           // set order promo code for only one time apply
           order.promoCode = promoCode;
-          order.promoCodeId = resBody["id"];
+          order.promoCodeId = resBody["id"] as int;
 
           // notify changes
           notifyListeners();
@@ -202,9 +192,9 @@ class AddOrderViewModel with ChangeNotifier {
 
         return true;
       } else {
-        var resBody = jsonDecode(res.body);
+        final resBody = jsonDecode(res.body);
         if (resBody["message"] != null) {
-          showResponseDialog(context, "Failed", resBody["message"]);
+          showResponseDialog(context, "Failed", resBody["message"] as String);
         } else {
           showResponseDialog(context, "Failed", res.reasonPhrase);
         }
@@ -212,7 +202,6 @@ class AddOrderViewModel with ChangeNotifier {
         return false;
       }
     } catch (e) {
-      print(e);
       return false;
     }
   }
@@ -228,9 +217,9 @@ class AddOrderViewModel with ChangeNotifier {
           content: Text(message),
           actions: [
             FlatButton(
-              child: Text("OK",
-                  style: const TextStyle(color: Constant.primaryColor)),
               onPressed: () => Navigator.pop(_),
+              child: const Text("OK",
+                  style: TextStyle(color: Constant.primaryColor)),
             ),
           ],
         );
@@ -238,7 +227,7 @@ class AddOrderViewModel with ChangeNotifier {
     );
   }
 
-  void updateVehicleType(int index) {
+  set updateVehicleType(int index) {
     order.vehicleType = index;
   }
 
@@ -248,7 +237,7 @@ class AddOrderViewModel with ChangeNotifier {
   }
 
   void addDropPoint() {
-    order.dropPoint.add(new DropPoint());
+    order.dropPoint.add(DropPoint());
     notifyListeners();
   }
 

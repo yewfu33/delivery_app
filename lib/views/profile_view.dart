@@ -16,6 +16,7 @@ class _ProfileViewState extends State<ProfileView> {
 
   @override
   void initState() {
+    super.initState();
     p.then((prefs) {
       setState(() {
         uid = prefs.getInt("uid");
@@ -23,7 +24,6 @@ class _ProfileViewState extends State<ProfileView> {
         phoneNum = prefs.getString("phone_num");
       });
     });
-    super.initState();
   }
 
   @override
@@ -55,10 +55,10 @@ class _ProfileViewState extends State<ProfileView> {
                     onTap: () {
                       showAboutDialog(
                         context: context,
-                        applicationIcon: FlutterLogo(),
+                        applicationIcon: const FlutterLogo(),
                         applicationName: "Delivery App",
                         applicationVersion: "1.0",
-                        children: <Widget>[
+                        children: const [
                           Text('empty here'),
                         ],
                       );
@@ -75,7 +75,7 @@ class _ProfileViewState extends State<ProfileView> {
                         FlatButton(
                           textColor: Constant.primaryColor,
                           onPressed: () async {
-                            SharedPreferences prefs =
+                            final SharedPreferences prefs =
                                 await SharedPreferences.getInstance();
                             prefs.clear();
                             Navigator.pushReplacementNamed(

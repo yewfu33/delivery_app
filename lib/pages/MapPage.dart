@@ -11,7 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class MapPage extends StatefulWidget {
   final OrderModel order;
 
-  MapPage({Key key, @required this.order}) : super(key: key);
+  const MapPage({Key key, @required this.order}) : super(key: key);
 
   @override
   _MapPageState createState() => _MapPageState();
@@ -22,7 +22,7 @@ class _MapPageState extends State<MapPage> {
   TrackingService trackingService;
   GoogleMapController _controller;
   StreamSubscription _subscription;
-  Set<Marker> _markers = {};
+  final Set<Marker> _markers = {};
   int _markerIdCounter = 1;
 
   void addMarker(double lat, double lon) {
@@ -59,7 +59,7 @@ class _MapPageState extends State<MapPage> {
   ];
 
   Stream<CouriersLocation> mockLocationStream() async* {
-    for (var l in mockLocation) {
+    for (final l in mockLocation) {
       yield l;
     }
   }
@@ -68,16 +68,13 @@ class _MapPageState extends State<MapPage> {
   void initState() {
     super.initState();
     prefs.then((p) {
-      var uid = p.getInt("uid");
+      final uid = p.getInt("uid");
       trackingService = TrackingService.init(uid);
-
-      print('uid =' + uid.toString());
 
       SchedulerBinding.instance.addPostFrameCallback((_) {
         _subscription = trackingService.trackingStream.listen((l) {
           if (mounted) {
-            print(
-                "uid =" + l.latitude.toString() + " " + l.longitude.toString());
+            print("uid =${l.latitude} ${l.longitude}");
             addMarker(l.latitude, l.longitude);
           }
         });
@@ -98,17 +95,14 @@ class _MapPageState extends State<MapPage> {
         title: const Text('Track order'),
         leading: const BackButton(),
       ),
-      body: Container(
-        child: GoogleMap(
-          mapType: MapType.normal,
-          initialCameraPosition: CameraPosition(
-              target: LatLng(widget.order.latitude, widget.order.longitude),
-              zoom: 15),
-          onMapCreated: (GoogleMapController controller) {
-            _controller = controller;
-          },
-          markers: _markers,
-        ),
+      body: GoogleMap(
+        initialCameraPosition: CameraPosition(
+            target: LatLng(widget.order.latitude, widget.order.longitude),
+            zoom: 15),
+        onMapCreated: (GoogleMapController controller) {
+          _controller = controller;
+        },
+        markers: _markers,
       ),
     );
   }

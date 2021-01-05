@@ -23,15 +23,15 @@ class RegisterViewModel extends BaseViewModel {
   final int max = 99999;
   final int min = 10000;
   final _formKey = GlobalKey<FormState>();
-  get formKey => _formKey;
+  GlobalKey<FormState> get formKey => _formKey;
   static final _scaffoldKey = GlobalKey<ScaffoldState>();
-  get scaffoldKey => _scaffoldKey;
+  GlobalKey<ScaffoldState> get scaffoldKey => _scaffoldKey;
 
   //throttle api call, only can call another one after 10sec pass
   final Function throttleSendVerificationCode = throttle(10, () {
     AccountService.sendVerificationCode(generatedVerificationCode);
     _scaffoldKey.currentState.showSnackBar(
-      SnackBar(
+      const SnackBar(
         duration: Duration(milliseconds: 500),
         content: Text('Verification Code sent'),
       ),
@@ -57,58 +57,58 @@ class RegisterViewModel extends BaseViewModel {
   Future registerAccount(BuildContext context) async {
     if (validateForm()) {
       //show loading banner
-      onLoading(true, context);
+      onLoading(context, isLoading: true);
 
       try {
-        final RegisterModel model = new RegisterModel(
-          name: this.nameField,
-          password: this.passwordField,
-          phoneNum: this.phoneNumField,
-          fcmToken: await notificationService.getFcmToken(),
-          userType: UserType.User,
+        final RegisterModel model = RegisterModel(
+          name: nameField,
+          password: passwordField,
+          phoneNum: phoneNumField,
+          fcmToken: await notificationService.getFcmToken() as String,
+          userType: UserType.user,
         );
 
         // register
-        var registerRes = await accountService.register(model);
+        final registerRes = await accountService.register(model);
 
         if (registerRes == null) throw Exception('fail to reach /register');
 
         if (registerRes.statusCode == 200) {
-          var registerResBody = json.decode(registerRes.body);
+          final registerResBody = json.decode(registerRes.body);
 
-          final LoginModel loginModel = new LoginModel(
-            phoneNum: registerResBody['phone_num'],
-            password: registerResBody['password'],
+          final LoginModel loginModel = LoginModel(
+            phoneNum: registerResBody['phone_num'] as String,
+            password: registerResBody['password'] as String,
           );
 
           // perform login
-          var loginRes = await accountService.login(loginModel);
+          final loginRes = await accountService.login(loginModel);
 
           if (loginRes.statusCode == 200) {
-            var loginResBody = json.decode(loginRes.body);
+            final loginResBody = json.decode(loginRes.body);
 
-            await accountService.setPrefs(loginResBody);
+            await accountService.setPrefs(loginResBody as Map<String, dynamic>);
 
             _formKey.currentState.reset();
 
             //hide loading banner
-            onLoading(false, context);
+            onLoading(context, isLoading: false);
 
             Navigator.pushAndRemoveUntil(context,
                 MaterialPageRoute(builder: (_) => Home()), (route) => false);
           } else {
             // error 400 maybe
-            onLoading(false, context);
+            onLoading(context, isLoading: false);
             showErrorDialog(context, message: loginRes.reasonPhrase);
           }
         } else {
           // error 400 maybe
-          onLoading(false, context);
+          onLoading(context, isLoading: false);
           showErrorDialog(context, message: registerRes.reasonPhrase);
         }
       } catch (e) {
         // error 400 maybe
-        onLoading(false, context);
+        onLoading(context, isLoading: false);
         showErrorDialog(context, message: e.toString());
       }
     }

@@ -8,14 +8,14 @@ class BottomActionBar extends StatelessWidget {
   final Function callBack;
   const BottomActionBar({Key key, @required this.callBack}) : super(key: key);
 
-  void showPricingDetail(
-      BuildContext context, double distance, double price, double discount) {
+  void showPricingDetail(BuildContext context, double distance, double price,
+      double basePrice, double discount) {
     showDialog(
       context: context,
       barrierDismissible: true,
       builder: (_) => Theme(
         data: ThemeData(
-          colorScheme: ColorScheme.light().copyWith(
+          colorScheme: const ColorScheme.light().copyWith(
             primary: Constant.primaryColor,
           ),
         ),
@@ -35,7 +35,7 @@ class BottomActionBar extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   const Text("Delivery Fee"),
-                  Text("RM $price"),
+                  Text((price == 0) ? "RM ${price + basePrice}" : "RM $price"),
                 ],
               ),
               const SizedBox(height: 10),
@@ -72,40 +72,37 @@ class BottomActionBar extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 22),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           GestureDetector(
             onTap: () {
-              showPricingDetail(
-                  context, distance, order.solidPrice, order.discount);
+              showPricingDetail(context, distance, order.solidPrice,
+                  order.basePrice, order.discount);
             },
-            child: Container(
-              child: Row(
-                children: [
-                  Text(
-                    'RM ${order.price} ',
-                    style: const TextStyle(
-                      color: Constant.primaryColor,
-                      fontSize: 20.0,
-                      letterSpacing: 0.4,
-                      fontWeight: FontWeight.w600,
-                    ),
+            child: Row(
+              children: [
+                Text(
+                  'RM ${order.price} ',
+                  style: const TextStyle(
+                    color: Constant.primaryColor,
+                    fontSize: 20.0,
+                    letterSpacing: 0.4,
+                    fontWeight: FontWeight.w600,
                   ),
-                  const Icon(Icons.help_outline, size: 18, color: Colors.grey),
-                ],
-              ),
+                ),
+                const Icon(Icons.help_outline, size: 18, color: Colors.grey),
+              ],
             ),
           ),
-          Spacer(),
+          const Spacer(),
           RaisedButton(
             onPressed: () {
               callBack();
             },
             color: Constant.primaryColor,
             textColor: Colors.white,
-            child: Text(
+            child: const Text(
               'CREATE ORDER',
-              style: const TextStyle(fontSize: 15.0, letterSpacing: 0.4),
+              style: TextStyle(fontSize: 15.0, letterSpacing: 0.4),
             ),
           ),
         ],

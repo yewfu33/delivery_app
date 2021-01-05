@@ -13,48 +13,47 @@ class OrdersPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 3,
-      initialIndex: 0,
       child: Scaffold(
         appBar: AppBar(
           title: const Text('My Orders'),
           actions: [
             // show search page
             IconButton(
-                icon: Icon(Icons.search),
+                icon: const Icon(Icons.search),
                 onPressed: () {
                   showSearch(
                     context: context,
                     delegate: CustomSearchDelegate(),
                   );
                 }),
-            IconButton(icon: Icon(Icons.more_vert), onPressed: () {}),
+            IconButton(icon: const Icon(Icons.more_vert), onPressed: () {}),
           ],
-          bottom: TabBar(
+          bottom: const TabBar(
             labelColor: Colors.white,
             indicatorColor: Constant.primaryColor,
             tabs: <Widget>[
               Tab(
-                child: const Text(
+                child: Text(
                   'Active',
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 16.0,
                     letterSpacing: 0.1,
                   ),
                 ),
               ),
               Tab(
-                child: const Text(
+                child: Text(
                   'Completed',
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 16.0,
                     letterSpacing: 0.1,
                   ),
                 ),
               ),
               Tab(
-                child: const Text(
+                child: Text(
                   'Inbox',
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 16.0,
                     letterSpacing: 0.1,
                   ),
@@ -67,7 +66,7 @@ class OrdersPage extends StatelessWidget {
           children: [
             ActiveOrder(),
             CompletedOrder(),
-            Icon(Icons.directions_bike),
+            const Icon(Icons.directions_bike),
           ],
         ),
       ),
@@ -80,19 +79,20 @@ class CustomSearchDelegate extends SearchDelegate {
 
   Future<List<OrderModel>> searchOrderHandler() async {
     try {
-      var res = await orderService.searchOrders(query);
+      final res = await orderService.searchOrders(query);
       if (res == null) throw Exception('Failed in searching orders');
 
       if (res.statusCode == 200) {
-        List<dynamic> body = json.decode(res.body);
+        final List<dynamic> body = json.decode(res.body) as List;
 
-        return body.map((e) => OrderModel.fromJson(e)).toList();
+        return body
+            .map((e) => OrderModel.fromJson(e as Map<String, dynamic>))
+            .toList();
       } else {
         throw Exception('Failed in searching orders');
       }
     } catch (e) {
-      print(e);
-      throw e;
+      rethrow;
     }
   }
 
@@ -100,7 +100,7 @@ class CustomSearchDelegate extends SearchDelegate {
     try {
       yield await searchOrderHandler();
     } catch (e) {
-      throw e;
+      rethrow;
     }
   }
 
@@ -133,33 +133,31 @@ class CustomSearchDelegate extends SearchDelegate {
       builder: (context, AsyncSnapshot<List<OrderModel>> snapshot) {
         if (snapshot.hasError) {
           return Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
-            children: [
+            children: const [
               Center(child: Text("Something went wrong")),
             ],
           );
         }
         if (!snapshot.hasData) {
           return Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
+            children: const [
               Center(
                   child: CircularProgressIndicator(
                 valueColor:
-                    new AlwaysStoppedAnimation<Color>(Constant.primaryColor),
+                    AlwaysStoppedAnimation<Color>(Constant.primaryColor),
               )),
             ],
           );
-        } else if (snapshot.data.length == 0) {
-          return Center(
+        } else if (snapshot.data.isEmpty) {
+          return const Center(
             child: Text(
               "No Results Found.",
             ),
           );
         } else {
-          var results = snapshot.data;
+          final results = snapshot.data;
           return ListView.builder(
             itemCount: results.length,
             itemBuilder: (context, index) {

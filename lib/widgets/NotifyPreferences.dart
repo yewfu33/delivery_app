@@ -24,50 +24,48 @@ class _NotifyPreferencesState extends State<NotifyPreferences> {
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 18),
-      child: Container(
-        child: Column(
-          children: <Widget>[
-            // Row(
-            //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //   children: <Widget>[
-            //     Text(
-            //       'Notify me by SMS',
-            //       style: customInputStyle(fontSize: 16),
-            //     ),
-            //     Switch(
-            //       activeColor: Constant.primaryColor,
-            //       value: notifyMe,
-            //       onChanged: (_) {
-            //         model.notifySenderOnChanged();
-            //         setState(() {
-            //           notifyMe = !notifyMe;
-            //         });
-            //       },
-            //     ),
-            //   ],
-            // ),
-            // const Divider(height: 5, thickness: 1.5),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Text(
-                  'Notify recipient by SMS',
-                  style: customInputStyle(fontSize: 16),
-                ),
-                Switch(
-                  activeColor: Constant.primaryColor,
-                  value: notifyRecipient,
-                  onChanged: (_) {
-                    model.notifyRecipientOnChanged();
-                    setState(() {
-                      notifyRecipient = !notifyRecipient;
-                    });
-                  },
-                ),
-              ],
-            ),
-          ],
-        ),
+      child: Column(
+        children: <Widget>[
+          // Row(
+          //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //   children: <Widget>[
+          //     Text(
+          //       'Notify me by SMS',
+          //       style: customInputStyle(fontSize: 16),
+          //     ),
+          //     Switch(
+          //       activeColor: Constant.primaryColor,
+          //       value: notifyMe,
+          //       onChanged: (_) {
+          //         model.notifySenderOnChanged();
+          //         setState(() {
+          //           notifyMe = !notifyMe;
+          //         });
+          //       },
+          //     ),
+          //   ],
+          // ),
+          // const Divider(height: 5, thickness: 1.5),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Text(
+                'Notify Recipient by SMS',
+                style: customInputStyle(fontSize: 16),
+              ),
+              Switch(
+                activeColor: Constant.primaryColor,
+                value: notifyRecipient,
+                onChanged: (_) {
+                  model.notifyRecipientOnChanged();
+                  setState(() {
+                    notifyRecipient = !notifyRecipient;
+                  });
+                },
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }

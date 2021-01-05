@@ -10,7 +10,7 @@ import '../util.dart';
 class OrderList extends StatelessWidget {
   final OrderModel order;
   // final DateFormat dateFormat = DateFormat('dd MM yyyy | jmz');
-  OrderList({Key key, this.order}) : super(key: key);
+  const OrderList({Key key, this.order}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -20,12 +20,21 @@ class OrderList extends StatelessWidget {
       },
       child: Container(
         width: double.infinity,
-        padding: EdgeInsets.only(top: 20, bottom: 20, left: 19, right: 25),
+        padding:
+            const EdgeInsets.only(top: 20, bottom: 20, left: 19, right: 25),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          border: Border(
+            bottom: BorderSide(
+              color: Colors.black.withOpacity(0.45),
+              width: 0.65,
+            ),
+          ),
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Row(
-              mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Text(
@@ -47,7 +56,7 @@ class OrderList extends StatelessWidget {
               padding: const EdgeInsets.only(bottom: 5, top: 7),
               child: Text(
                 'RM ${order.price}',
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 17.5,
                   fontWeight: FontWeight.w500,
                 ),
@@ -56,9 +65,6 @@ class OrderList extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(bottom: 10, top: 5),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisSize: MainAxisSize.max,
                 children: [
                   const Icon(Icons.explore),
                   const SizedBox(width: 10),
@@ -82,15 +88,6 @@ class OrderList extends StatelessWidget {
               ),
             ),
           ],
-        ),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          border: Border(
-            bottom: BorderSide(
-              color: Colors.black.withOpacity(0.45),
-              width: 0.65,
-            ),
-          ),
         ),
       ),
     );

@@ -16,7 +16,7 @@ class _RegisterViewState extends State<RegisterView> {
 
   @override
   void initState() {
-    _controller = new TextEditingController(text: '+60 ');
+    _controller = TextEditingController(text: '+60 ');
     super.initState();
   }
 
@@ -37,12 +37,13 @@ class _RegisterViewState extends State<RegisterView> {
           child: Scaffold(
             key: model.scaffoldKey,
             appBar: AppBar(
-              title: Text('Create Account'),
+              title: const Text('Create Account'),
               leading: BackButton(onPressed: () => Navigator.pop(context)),
             ),
             body: SingleChildScrollView(
               child: Container(
-                padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 25.0),
+                padding: const EdgeInsets.symmetric(
+                    vertical: 20.0, horizontal: 25.0),
                 child: Form(
                   key: model.formKey,
                   child: Column(
@@ -113,7 +114,7 @@ class _RegisterViewState extends State<RegisterView> {
                               model.sendVerificationCode();
                             },
                             textColor: Constant.primaryColor,
-                            child: Text('SEND SMS VERIFICATION CODE'),
+                            child: const Text('SEND SMS VERIFICATION CODE'),
                           ),
                         ),
                       ),
@@ -152,10 +153,10 @@ class _RegisterViewState extends State<RegisterView> {
                             },
                             color: Constant.primaryColor,
                             textColor: Colors.white,
-                            child: Text(
+                            child: const Text(
                               'Register',
-                              style: const TextStyle(
-                                  fontSize: 17.0, letterSpacing: 0.4),
+                              style:
+                                  TextStyle(fontSize: 17.0, letterSpacing: 0.4),
                             ),
                           ),
                         ),

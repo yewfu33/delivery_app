@@ -19,18 +19,18 @@ class AccountService extends ApiService {
   AccountService._();
 
   Future setPrefs(Map<String, dynamic> body) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    prefs.setInt('uid', body['id']);
-    prefs.setString('uname', body['name']);
-    prefs.setString('phone_num', body['phone_num']);
-    prefs.setString('token', body['token']);
+    prefs.setInt('uid', body['id'] as int);
+    prefs.setString('uname', body['name'] as String);
+    prefs.setString('phone_num', body['phone_num'] as String);
+    prefs.setString('token', body['token'] as String);
   }
 
   static Future sendVerificationCode(int code) async {
     try {
-      final res = await http.post(
-        Constant.serverName + 'api/verification',
+      await http.post(
+        '${Constant.serverName}api/verification',
         headers: {
           'Content-type': 'application/json',
         },
@@ -38,28 +38,23 @@ class AccountService extends ApiService {
           'value': code.toString(),
         }),
       );
-
-      print(res.statusCode);
-    } on SocketException catch (e) {
-      print("socket exception in \"sendVerificationCode\", " + e.toString());
+    } on SocketException {
       return null;
     } catch (e) {
-      print(e.toString());
+      return null;
     }
   }
 
   Future<http.Response> login(LoginModel model) async {
     try {
       return await client.post(
-        Constant.serverName + accountPath + '/authenticate',
+        '${Constant.serverName}$accountPath/authenticate',
         headers: headers,
         body: json.encode(model.toMap()),
       );
-    } on SocketException catch (e) {
-      print("socket exception in \"login\", " + e.toString());
+    } on SocketException {
       return Future.error('Request timeout please try again later');
     } catch (e) {
-      print(e);
       return null;
     }
   }
@@ -67,14 +62,13 @@ class AccountService extends ApiService {
   Future<http.Response> register(RegisterModel model) async {
     try {
       return await client.post(
-        Constant.serverName + accountPath + '/register',
+        '${Constant.serverName}$accountPath/register',
         headers: headers,
         body: json.encode(model.toMap()),
       );
-    } on SocketException catch (e) {
-      print("timeout exception in \"register\", " + e.toString());
+    } on SocketException {
       return Future.error('Request timeout please try again later');
-    } catch (err) {
+    } catch (e) {
       return null;
     }
   }

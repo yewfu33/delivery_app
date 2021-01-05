@@ -12,11 +12,11 @@ class Order {
   String contact;
   DateTime dateTime = DateTime.now();
   double _price = 0;
-  get price => (_basePrice + _price);
+  double get price => _basePrice + _price;
   double _solidPrice = 0;
-  get solidPrice => _solidPrice;
+  double get solidPrice => _solidPrice;
   double _discount = 0;
-  get discount => _discount;
+  double get discount => _discount;
 
   String promoCode = "";
   int promoCodeId = 0;
@@ -28,25 +28,26 @@ class Order {
   bool notifyRecipientbySMS = false;
   DateTime createdAt;
   List<DropPoint> dropPoint = <DropPoint>[
-    new DropPoint(),
+    DropPoint(),
   ];
 
   final double _basePrice = 4.0;
+  double get basePrice => _basePrice;
   final double _pricePerKM = 2;
 
   set setDiscountValue(double d) {
-    this._discount = d;
+    _discount = d;
   }
 
   void calculatePriceFromDistance(int distanceInMeter) {
-    double distanceInKM = distanceInMeter / 1000;
+    final double distanceInKM = distanceInMeter / 1000;
     if (distanceInKM < 1) {
-      this._solidPrice = this._price;
-      this._price = this._price;
+      _solidPrice = _price;
+      _price = _price;
     } else {
-      var p = (distanceInKM * _pricePerKM).roundToDouble();
-      this._solidPrice = p + _basePrice;
-      this._price = p;
+      final p = (distanceInKM * _pricePerKM).roundToDouble();
+      _solidPrice = p + _basePrice;
+      _price = p;
     }
   }
 
@@ -57,15 +58,18 @@ class Order {
   }
 
   void resetPrice() {
-    this._price = 0;
+    _price = 0;
   }
 
   Map toMap() {
-    List<Map> dp = this.dropPoint != null
-        ? this.dropPoint.map((i) => i.toMap()).toList()
-        : null;
+    List<Map> dp;
+    if (dropPoint != null) {
+      dp = dropPoint.map((i) => i.toMap()).toList();
+    } else {
+      dp = null;
+    }
 
-    Map m = {
+    final Map m = {
       'name': name,
       'weight': weight,
       'pick_up_address': address,

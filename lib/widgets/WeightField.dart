@@ -36,27 +36,27 @@ class WeightField extends StatelessWidget {
         items: [
           for (var i in weightSelect.entries)
             DropdownMenuItem<double>(
-              child: Text(i.key),
-              value: i.value,
-              key: Key(i.key),
+              value: i.value as double,
+              key: Key(i.key as String),
+              child: Text(i.key as String),
             )
         ],
-        onChanged: (v) {
-          if (v >= 10 && model.order.vehicleType < 1) {
+        onChanged: (double v) {
+          if ((v >= 10) && model.order.vehicleType < 1) {
             showDialog(
               context: context,
               barrierDismissible: true,
               barrierColor: Colors.black.withOpacity(0.5),
               builder: (_) {
                 return AlertDialog(
-                  title: Text("Alert"),
-                  content: Text(
+                  title: const Text("Alert"),
+                  content: const Text(
                       "If your item weight is 10KG or above consider a car couriers"),
                   actions: [
                     FlatButton(
-                      child: Text("OK",
-                          style: const TextStyle(color: Constant.primaryColor)),
                       onPressed: () => Navigator.pop(_),
+                      child: const Text("OK",
+                          style: TextStyle(color: Constant.primaryColor)),
                     ),
                   ],
                 );

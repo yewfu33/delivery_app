@@ -5,10 +5,10 @@ import 'package:flutter/material.dart';
 class BaseViewModel extends ChangeNotifier {
   final DialogService dialogService = DialogService();
 
-  bool _loading = false;
-  get loading => _loading;
+  final bool _loading = false;
+  bool get loading => _loading;
 
-  void onLoading(bool isLoading, BuildContext context) {
+  void onLoading(BuildContext context, {bool isLoading}) {
     if (isLoading) {
       dialogService.showDialog();
     } else {
@@ -28,9 +28,9 @@ class BaseViewModel extends ChangeNotifier {
           content: Text(message),
           actions: [
             FlatButton(
-              child: Text("OK",
-                  style: const TextStyle(color: Constant.primaryColor)),
               onPressed: () => Navigator.pop(_),
+              child: const Text("OK",
+                  style: TextStyle(color: Constant.primaryColor)),
             ),
           ],
         );

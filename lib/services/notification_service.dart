@@ -11,14 +11,14 @@ class NotificationService {
   bool _initialized = false;
 
   NotificationService._init() {
-    this.init();
+    init();
   }
 
   Future<void> init() async {
-    this.configure();
+    configure();
 
     if (!_initialized) {
-      String fcmToken = await _fcm.getToken();
+      final String fcmToken = await _fcm.getToken();
 
       print("Fcm token : $fcmToken");
 
@@ -27,7 +27,7 @@ class NotificationService {
   }
 
   Future getFcmToken() async {
-    return await _fcm.getToken();
+    return _fcm.getToken();
   }
 
   void configure() {
@@ -56,11 +56,5 @@ class NotificationService {
 
   static Future myBackgroundMessageHandler(Map<String, dynamic> message) async {
     print("myBackgroundMessageHandler message: $message");
-    int msgId = int.tryParse(message["data"]["msgId"].toString()) ?? 0;
-    print("msgId $msgId");
-    if (message.containsKey('notification')) {
-      // Handle notification message
-      print(message['notification']);
-    }
   }
 }

@@ -20,18 +20,19 @@ class _ActiveOrderState extends State<ActiveOrder> {
 
   Future<List<OrderModel>> fetchActiveOrder() async {
     try {
-      var res = await orderService.getActiveOrders();
+      final res = await orderService.getActiveOrders();
       if (res == null) throw Exception('failed to fetch active order');
 
       if (res.statusCode == 200) {
-        List<dynamic> body = json.decode(res.body);
+        final List body = json.decode(res.body) as List;
 
-        return body.map((e) => OrderModel.fromJson(e)).toList();
+        return body
+            .map((e) => OrderModel.fromJson(e as Map<String, dynamic>))
+            .toList();
       } else {
         return null;
       }
     } catch (e) {
-      print(e);
       return null;
     }
   }
@@ -56,11 +57,9 @@ class _ActiveOrderState extends State<ActiveOrder> {
       ),
       scrollController: _scrollController,
       firstRefresh: true,
-      firstRefreshWidget: Container(
-        child: const Center(
-          child: const CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(Constant.primaryColor)),
-        ),
+      firstRefreshWidget: const Center(
+        child: CircularProgressIndicator(
+            valueColor: AlwaysStoppedAnimation<Color>(Constant.primaryColor)),
       ),
       onRefresh: () async {
         _orders = await fetchActiveOrder();
@@ -72,7 +71,6 @@ class _ActiveOrderState extends State<ActiveOrder> {
           });
         }
       },
-      onLoad: null,
       slivers: <Widget>[
         SliverList(
           delegate: SliverChildBuilderDelegate(
@@ -83,16 +81,15 @@ class _ActiveOrderState extends State<ActiveOrder> {
           ),
         ),
       ],
-      emptyWidget: (_orders == null || _orders.length == 0)
-          ? Container(
+      emptyWidget: (_orders == null || _orders.isEmpty)
+          ? SizedBox(
               height: double.infinity,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   const Expanded(
-                    child: SizedBox(),
                     flex: 2,
+                    child: SizedBox(),
                   ),
                   SizedBox(
                     width: 50.0,
@@ -108,8 +105,8 @@ class _ActiveOrderState extends State<ActiveOrder> {
                     style: TextStyle(fontSize: 14.0, color: Colors.grey[400]),
                   ),
                   const Expanded(
-                    child: SizedBox(),
                     flex: 3,
+                    child: SizedBox(),
                   ),
                 ],
               ),
