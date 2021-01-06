@@ -6,12 +6,12 @@ import 'package:signalr_client/signalr_client.dart';
 
 class TrackingService {
   // HubConnection instance
-  HubConnection hubConnection;
+  HubConnection _hubConnection;
 
   // The location of the SignalR Server.
-  final String serverUrl = "${Constant.serverName}${Constant.hub}";
+  final String _serverUrl = "${Constant.serverName}${Constant.hub}";
 
-  final hubMethodName = "CourierLocation";
+  final _hubMethodName = "CourierLocation";
 
   // traking use stream
   final StreamController<CouriersLocation> _trackingController =
@@ -21,16 +21,16 @@ class TrackingService {
 
   TrackingService.init(int uid) {
     // Creates the connection by using the HubConnectionBuilder.
-    hubConnection = HubConnectionBuilder().withUrl(serverUrl).build();
+    _hubConnection = HubConnectionBuilder().withUrl(_serverUrl).build();
 
     // When the connection is closed, print out a message to the console.
-    hubConnection.onclose((error) => print("Connection Closed, err: $error"));
+    _hubConnection.onclose((error) => print("Connection Closed, err: $error"));
 
-    hubConnection.on("OnHubConnected", (List<Object> parameters) {
+    _hubConnection.on("OnHubConnected", (List<Object> parameters) {
       print('${parameters[0]}');
     });
 
-    hubConnection.on(hubMethodName, (List<Object> parameters) {
+    _hubConnection.on(_hubMethodName, (List<Object> parameters) {
       // add couriers location to a listenable stream
       _trackingController.add(CouriersLocation(
           latitude: parameters[0] as double,
@@ -38,8 +38,8 @@ class TrackingService {
     });
 
     try {
-      hubConnection.start().then((_) {
-        hubConnection.invoke("registerConnectionId", args: <Object>[uid]);
+      _hubConnection.start().then((_) {
+        _hubConnection.invoke("registerConnectionId", args: <Object>[uid]);
       }).catchError((e) => throw e);
     } catch (e) {
       print(e.toString());
@@ -47,15 +47,15 @@ class TrackingService {
   }
 
   void off() {
-    hubConnection.off(hubMethodName);
+    _hubConnection.off(_hubMethodName);
   }
 
   void invoke(String methodName, CouriersLocation location) {
     try {
       // null safety
-      if (hubConnection == null) return;
+      if (_hubConnection == null) return;
 
-      hubConnection.invoke(methodName, args: <Object>[
+      _hubConnection.invoke(methodName, args: <Object>[
         location.latitude,
         location.longitude,
       ]);

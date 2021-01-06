@@ -9,10 +9,10 @@ import 'package:flutter/material.dart';
 
 import '../main.dart';
 
-class LoginViewModel extends BaseViewModel {
+class LoginViewModel extends BaseViewModel with ChangeNotifier {
   final AccountService accountService = AccountService();
 
-  bool autoValidateForm = true;
+  bool autoValidateForm = false;
 
   final _formKey = GlobalKey<FormState>();
   GlobalKey<FormState> get formKey => _formKey;

@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:math';
 
-import 'package:delivery_app/helper/throttle.dart';
 import 'package:delivery_app/models/uiModels/login_model.dart';
 import 'package:delivery_app/models/uiModels/register_model.dart';
 import 'package:delivery_app/models/user_type.dart';
@@ -13,7 +12,7 @@ import 'package:flutter/material.dart';
 
 import '../main.dart';
 
-class RegisterViewModel extends BaseViewModel {
+class RegisterViewModel extends BaseViewModel with ChangeNotifier {
   final AccountService accountService = AccountService();
   final NotificationService notificationService = NotificationService();
 
@@ -26,17 +25,6 @@ class RegisterViewModel extends BaseViewModel {
   GlobalKey<FormState> get formKey => _formKey;
   static final _scaffoldKey = GlobalKey<ScaffoldState>();
   GlobalKey<ScaffoldState> get scaffoldKey => _scaffoldKey;
-
-  //throttle api call, only can call another one after 10sec pass
-  final Function throttleSendVerificationCode = throttle(10, () {
-    AccountService.sendVerificationCode(generatedVerificationCode);
-    _scaffoldKey.currentState.showSnackBar(
-      const SnackBar(
-        duration: Duration(milliseconds: 500),
-        content: Text('Verification Code sent'),
-      ),
-    );
-  });
 
   String nameField;
   String passwordField;
@@ -114,10 +102,17 @@ class RegisterViewModel extends BaseViewModel {
     }
   }
 
-  void sendVerificationCode() {
+  Future sendVerificationCode() async {
     final rng = Random();
-    RegisterViewModel.generatedVerificationCode = rng.nextInt(max - min) + min;
+    generatedVerificationCode = rng.nextInt(max - min) + min;
+    print("code = $generatedVerificationCode");
 
-    throttleSendVerificationCode();
+    await accountService.sendVerificationCode(generatedVerificationCode);
+    _scaffoldKey.currentState.showSnackBar(
+      const SnackBar(
+        duration: Duration(milliseconds: 1000),
+        content: Text('Verification Code sent'),
+      ),
+    );
   }
 }

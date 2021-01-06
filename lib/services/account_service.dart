@@ -27,7 +27,7 @@ class AccountService extends ApiService {
     prefs.setString('token', body['token'] as String);
   }
 
-  static Future sendVerificationCode(int code) async {
+  Future sendVerificationCode(int code) async {
     try {
       await http.post(
         '${Constant.serverName}api/verification',

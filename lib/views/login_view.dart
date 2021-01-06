@@ -7,45 +7,28 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 //individual form
-class IndividualLoginView extends StatefulWidget {
+class IndividualLoginView extends StatelessWidget {
   final BuildContext parentContext;
+
   const IndividualLoginView({Key key, @required this.parentContext})
       : super(key: key);
 
   @override
-  _IndividualLoginViewState createState() => _IndividualLoginViewState();
-}
-
-class _IndividualLoginViewState extends State<IndividualLoginView> {
-  TextEditingController _controller;
-
-  @override
-  void initState() {
-    _controller = TextEditingController(text: '+60 ');
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final model = Provider.of<LoginViewModel>(context, listen: false);
+    final model = Provider.of<LoginViewModel>(context);
 
     return SingleChildScrollView(
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 25.0, horizontal: 25.0),
         child: Form(
           key: model.formKey,
+          autovalidate: model.autoValidateForm,
           child: Column(
             children: <Widget>[
               Padding(
                 padding: const EdgeInsets.only(bottom: 15.0),
                 child: TextFormField(
-                  controller: _controller,
+                  initialValue: '+60 ',
                   validator: (v) {
                     if (v == '+60 ') {
                       return 'This field is required';
@@ -91,7 +74,7 @@ class _IndividualLoginViewState extends State<IndividualLoginView> {
                       // bring down the keyboard
                       FocusScope.of(context).unfocus();
 
-                      model.individualLogin(widget.parentContext);
+                      model.individualLogin(parentContext);
                     },
                     color: Constant.primaryColor,
                     textColor: Colors.white,
